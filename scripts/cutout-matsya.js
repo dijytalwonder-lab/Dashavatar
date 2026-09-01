@@ -13,7 +13,7 @@ import path from 'path';
 import fs from 'fs';
 
 const root = path.dirname(fileURLToPath(import.meta.url)) + '/..';
-const IN = root + '/Assets/MATSYA.png';
+const IN = root + '/Assets/Matsya/MATSYA.png';
 const OUT = root + '/public/images/matsya.png';
 
 const LUMA_T = 135; // fill through pixels darker than this (bg + glow)

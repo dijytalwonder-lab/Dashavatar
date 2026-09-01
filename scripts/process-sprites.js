@@ -13,7 +13,7 @@ import path from 'path';
 import fs from 'fs';
 
 const root = path.dirname(fileURLToPath(import.meta.url)) + '/..';
-const SRC = root + '/Assets';
+const SRC = root + '/Assets/Matsya'; // Matsya gameplay/world sprite sources
 const OUT = root + '/public/images';
 fs.mkdirSync(OUT, { recursive: true });
 const only = process.argv[2];

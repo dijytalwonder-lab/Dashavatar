@@ -10,7 +10,7 @@ import path from 'path';
 import fs from 'fs';
 
 const root = path.dirname(fileURLToPath(import.meta.url)) + '/..';
-const SRC = root + '/Assets/MatsySprites.png';
+const SRC = root + '/Assets/Matsya/MatsySprites.png';
 const OUTDIR = root + '/public/images';
 
 // Top-row cells (source is 1536x1024, ~6 columns).

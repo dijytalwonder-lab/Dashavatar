@@ -10,7 +10,7 @@ import path from 'path';
 import fs from 'fs';
 
 const root = path.dirname(fileURLToPath(import.meta.url)) + '/..';
-const SRC = root + '/Assets/MatsySprites.png';
+const SRC = root + '/Assets/Matsya/MatsySprites.png';
 const OUTDIR = root + '/public/images';
 const ALPHA_MIN = 55;
 

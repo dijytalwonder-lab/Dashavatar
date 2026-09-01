@@ -12,9 +12,10 @@ const OUT = root + '/public/images';
 fs.mkdirSync(OUT, { recursive: true });
 
 // [srcFile, outKey, targetWidth, hasAlpha]
+// UI art still lives at the top level of Assets/ (Matsya's world art moved to
+// Assets/Matsya/ and is handled by process-sprites.js / build-matsya-*.js).
 const jobs = [
   ['MainMenuBg.png', 'menuBg', 820, false],
-  ['MatsyaWorld.png', 'matsyaWorldBg', 1500, false],
   ['logo.png', 'logo', 1000, true],
   ['play.png', 'btnPlay', 900, true],
   ['chapters.png', 'btnChapters', 900, true],
