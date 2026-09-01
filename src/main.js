@@ -15,6 +15,9 @@ import UIScene from './scenes/UIScene.js';
 import Story2Scene from './scenes/Story2Scene.js';
 import Level2Scene from './scenes/Level2Scene.js';
 import Ending2Scene from './scenes/Ending2Scene.js';
+import Story3Scene from './scenes/Story3Scene.js';
+import Level3Scene from './scenes/Level3Scene.js';
+import Ending3Scene from './scenes/Ending3Scene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -54,7 +57,10 @@ const config = {
     UIScene,
     Story2Scene,
     Level2Scene,
-    Ending2Scene
+    Ending2Scene,
+    Story3Scene,
+    Level3Scene,
+    Ending3Scene
   ]
 };
 

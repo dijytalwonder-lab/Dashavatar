@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { GAME_W, GAME_H, COLORS } from '../config.js';
 import { generateAllTextures } from '../systems/Textures.js';
 import { generateKurmaTextures } from '../systems/KurmaTextures.js';
+import { generateVarahaTextures } from '../systems/VarahaTextures.js';
 
 // PreloadScene — builds all procedural textures and shows a loading bar.
 // To swap in real art later: this.load.image('matsya', 'images/matsya.png') etc.
@@ -74,6 +75,7 @@ export default class PreloadScene extends Phaser.Scene {
   create() {
     generateAllTextures(this);
     generateKurmaTextures(this);
+    generateVarahaTextures(this);
 
     // Matsya animations (global — usable from any scene).
     if (!this.anims.exists('matsya-swim')) {

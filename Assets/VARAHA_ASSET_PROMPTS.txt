@@ -1,0 +1,65 @@
+================================================================================
+ DASHAVATARA — WORLD 3: VARAHA (Rescue of the Earth)
+ ART ASSET PROMPTS  —  CHIBI CUTE STYLE (match Worlds 1-2)
+================================================================================
+
+World 3 runs on PROCEDURAL placeholder art (src/systems/VarahaTextures.js). Swap
+in real art by dropping transparent PNGs in public/images/ under the SAME key and
+loading them in PreloadScene.js — the procedural version is then skipped.
+
+STYLE: chibi-cute, thick outlines, soft shading, gold accents; the mood is a dark
+descent into the deep ocean / underworld (Rasatala) to rescue the Earth.
+
+[varaha]  (~132x100, faces RIGHT)
+"Chibi cute mighty divine boar, Vishnu's Varaha avatar. Big friendly eyes, a
+sturdy dark-purple body, cute snout, two upward ivory TUSKS, small ears, a tiny
+gold tilak. Heroic and strong but adorable. Side view, kawaii, transparent bg."
+  (Optional later: a 2-3 frame CHARGE pose sheet — head down, tusks forward,
+   motion streak — uniform cells, transparent, for the Strength charge.)
+
+[breakRock]  (~96x150)  — smashable stone barrier
+"Chibi cute cracked stone pillar/wall block, grey-brown, with a few cracks and a
+faint glowing gold weak-spot gem in the middle. Reads as breakable. Tileable
+vertically. Transparent bg."
+
+[deepEnemy]  (~76x56, faces LEFT)
+"Chibi cute-but-nasty deep-sea imp/fish: dark magenta body, fanged mouth, glowing
+yellow eye, small spiky fins. A baddie of the abyss, adorable. Side view,
+transparent bg."
+
+[relic]  (~44x44)  — Earth relic collectible
+"Chibi cute glowing relic: a small blue-green earth shard/orb with a gold ring
+and sparkles. Kawaii, transparent bg."
+
+[earth]  (~120x120)  — Bhudevi, the Earth to lift
+"Chibi cute planet Earth (the goddess Bhudevi): a round blue ocean globe with
+soft green continents, gentle clouds, a warm golden halo. Precious and alive.
+Transparent bg."
+
+[hiranyaksha]  (~210x220)  — the demon boss
+"Chibi cute-but-menacing asura demon (Hiranyaksha): big dark-green muscular
+head/torso, golden crown-horns, glowing golden eyes, a fanged grin, maybe a hint
+of a mace. Villain but adorable, kawaii boss. Front view, transparent bg."
+
+[caveSpike]  (~70x70)  — hazard
+"Chibi cute row of stone stalagmite spikes, grey-brown, a little pointy (hazard)
+but rounded/cute. Bottom-anchored (also used flipped as ceiling). Transparent bg."
+
+--------------------------------------------------------------------------------
+BACKGROUND + WORLD CARD
+--------------------------------------------------------------------------------
+[worldVaraha]  (landscape) — chapter-select card art
+"Chibi storybook scene: the mighty boar Varaha diving through a dark glowing
+abyss, the blue Earth cradled on his tusks, rising toward a shaft of light, with
+the demon Hiranyaksha lurking below. Epic and cute."
+
+[level background] — a dark deep-ocean / underworld cavern backdrop (reuses the
+World 1 bg_far/mid/near style if not provided; darker, with cavern silhouettes,
+faint gold light shafts).
+
+================================================================================
+KEYS USED BY THE CODE (World 3)
+================================================================================
+varaha, breakRock, deepEnemy, relic, earth, hiranyaksha, caveSpike
+(+ optional: worldVaraha card art, a level background)
+================================================================================
