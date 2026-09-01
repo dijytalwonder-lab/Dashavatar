@@ -12,7 +12,14 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setCollideWorldBounds(true);
-    this.body.setCircle(24, 22, 6);
+    // Scale the real hero sprite to a good gameplay size (~120px wide) and fit a
+    // circular hitbox over the fish's head/body. Falls back cleanly if a smaller
+    // (procedural) texture is in use.
+    const targetW = 120;
+    this.baseScale = Math.min(1, targetW / this.width);
+    this.setScale(this.baseScale);
+    const r = this.height * 0.34;
+    this.body.setCircle(r, this.width * 0.62 - r, this.height * 0.5 - r);
     this.setDrag(TUNING.matsyaDrag);
     this.setMaxVelocity(TUNING.dashSpeed);
     this.setDepth(50);
@@ -94,8 +101,14 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
     this.dashReadyAt = this.scene.time.now + TUNING.dashCooldown;
     this.invincibleUntil = Math.max(this.invincibleUntil, this.scene.time.now + TUNING.dashDuration);
     AudioManager.dash();
-    // dash streak
-    this.scene.tweens.add({ targets: this, scaleX: 1.25, scaleY: 0.8, duration: 120, yoyo: true });
+    // dash streak (squash relative to the sprite's base scale)
+    this.scene.tweens.add({
+      targets: this,
+      scaleX: this.baseScale * 1.18,
+      scaleY: this.baseScale * 0.82,
+      duration: 120,
+      yoyo: true
+    });
     this.scene.cameras.main.shake(80, 0.004);
   }
 

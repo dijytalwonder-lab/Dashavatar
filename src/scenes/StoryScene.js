@@ -64,7 +64,7 @@ export default class StoryScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     // Matsya swims across the top during the story
-    const fish = this.add.image(-80, 160, 'matsya').setScale(1.2);
+    const fish = this.add.image(-80, 160, 'matsya').setScale(0.55);
     this.tweens.add({
       targets: fish,
       x: GAME_W + 80,

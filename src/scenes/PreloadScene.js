@@ -42,6 +42,7 @@ export default class PreloadScene extends Phaser.Scene {
     this._barW = barW;
 
     // Real UI + world art (procedural sprites are still generated in create()).
+    this.load.image('matsya', 'images/matsya.png'); // real hero sprite
     this.load.image('menuBg', 'images/menuBg.png');
     this.load.image('logo', 'images/logo.png');
     this.load.image('btnPlay', 'images/btnPlay.png');

@@ -22,6 +22,8 @@ function css(hex, alpha = 1) {
 
 export function generateAllTextures(scene) {
   // --- Matsya: a sleek golden-teal fish facing right ---
+  // Skipped when the real hero sprite (public/images/matsya.png) is loaded.
+  if (!scene.textures.exists('matsya'))
   makeCanvasTexture(scene, 'matsya', 96, 60, (ctx, w, h) => {
     // tail
     ctx.fillStyle = css(COLORS.matsyaFin);
