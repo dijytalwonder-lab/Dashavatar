@@ -8,7 +8,7 @@ import SaveManager from '../systems/SaveManager.js';
 // previous one is completed, but only Chapter 1 is playable so far.
 const WORLDS = [
   { n: 1,  emoji: '🐟', name: 'Matsya',      sub: 'The Great Flood',   tag: 'Swimming + Rescue',         art: 'worldMatsya', playable: true },
-  { n: 2,  emoji: '🐢', name: 'Kurma',       sub: 'The Churning Sea',  tag: 'Defense + Survival' },
+  { n: 2,  emoji: '🐢', name: 'Kurma',       sub: 'The Churning Sea',  tag: 'Defense + Survival', story: 'Story2' },
   { n: 3,  emoji: '🐗', name: 'Varaha',      sub: 'The Sunken Earth',  tag: 'Exploration + Boss' },
   { n: 4,  emoji: '🦁', name: 'Narasimha',   sub: 'The Pillar',        tag: 'Action Combat' },
   { n: 5,  emoji: '👣', name: 'Vamana',      sub: 'Three Steps',       tag: 'Puzzle + Strategy' },
@@ -64,7 +64,8 @@ export default class ChapterSelectScene extends Phaser.Scene {
     WORLDS.slice(1).forEach((w, i) => {
       const cx = startX + (i % cols) * (tileW + gx);
       const cy = startY + Math.floor(i / cols) * (tileH + gy);
-      this._lockedTile(w, cx, cy, tileW, tileH);
+      if (this._isUnlocked(w.n) && w.story) this._playableTile(w, cx, cy, tileW, tileH);
+      else this._lockedTile(w, cx, cy, tileW, tileH);
     });
 
     // Toast
@@ -154,6 +155,28 @@ export default class ChapterSelectScene extends Phaser.Scene {
 
     // gentle glow pulse on the frame
     this.tweens.add({ targets: frame, alpha: { from: 1, to: 0.6 }, duration: 1200, yoyo: true, repeat: -1 });
+  }
+
+  // ---- Playable tile (an unlocked world with content but no world-art yet) ----
+  _playableTile(w, cx, cy, tw, th) {
+    const done = SaveManager.data.chapters[w.n] && SaveManager.data.chapters[w.n].completed;
+    const g = this.add.container(cx, cy);
+    const bg = this.add.rectangle(0, 0, tw, th, 0x0a3a5c, 0.9).setStrokeStyle(3, COLORS.gold, 0.9);
+    g.add(bg);
+    g.add(this.add.circle(0, -38, 30, 0x146c94, 0.95).setStrokeStyle(2, COLORS.air, 0.7));
+    g.add(this.add.text(0, -38, w.emoji, { fontSize: '32px' }).setOrigin(0.5));
+    g.add(this.add.text(0, 8, `${w.n}. ${w.name}`, { fontFamily: 'Georgia, serif', fontSize: '20px', color: '#eaf6ff', fontStyle: 'bold' }).setOrigin(0.5));
+    g.add(this.add.text(0, 32, w.tag, { fontFamily: 'system-ui', fontSize: '12px', color: '#9bd7ef', align: 'center', wordWrap: { width: tw - 24 } }).setOrigin(0.5));
+    g.add(this.add.text(0, 60, done ? '✓ PLAY AGAIN' : 'PLAY  ▶', { fontFamily: 'system-ui', fontSize: '16px', color: done ? '#4be86b' : '#ffd257', fontStyle: 'bold' }).setOrigin(0.5));
+    this.tweens.add({ targets: bg, alpha: { from: 0.9, to: 0.7 }, duration: 1300, yoyo: true, repeat: -1 });
+
+    bg.setInteractive({ useHandCursor: true })
+      .on('pointerover', () => g.setScale(1.03)).on('pointerout', () => g.setScale(1))
+      .on('pointerup', () => {
+        AudioManager.click();
+        this.cameras.main.fadeOut(300, 0, 8, 20);
+        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(w.story));
+      });
   }
 
   // ---- Locked tile (Worlds 2-10) — ornate locked-world plaque ----

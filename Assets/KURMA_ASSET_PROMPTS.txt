@@ -1,0 +1,94 @@
+================================================================================
+ DASHAVATARA — WORLD 2: KURMA (The Churning of the Ocean)
+ ART ASSET PROMPTS  —  CHIBI CUTE STYLE (match World 1)
+================================================================================
+
+World 2 currently runs on PROCEDURAL placeholder art (drawn in code in
+src/systems/KurmaTextures.js). To swap in real art: generate transparent PNGs,
+drop them in public/images/ under the SAME key, load them in PreloadScene.js —
+the procedural version is then skipped automatically (guarded by texture key).
+
+STYLE: identical chibi-cute look to World 1 — big eyes, rounded shapes, thick
+clean outlines, soft shading, gold accents, deep-blue underwater palette. The
+mood is the epic Samudra Manthan (churning of the ocean of milk).
+
+--------------------------------------------------------------------------------
+HERO
+--------------------------------------------------------------------------------
+[kurma]  (~120x96, faces RIGHT)
+"Chibi cute divine tortoise, Vishnu's Kurma avatar. Big round sparkly eyes, tiny
+smile, green domed shell with a subtle gold rim and a small gold tilak on the
+forehead, stubby legs, cute face poking out to the right. Kawaii, thick outline,
+transparent background."
+
+[kurmaShell]  (~110x84)  — retracted defensive shell
+"The same chibi tortoise fully retracted into its shell: a rounded green dome
+with gold-rimmed hexagonal plates and a warm inner glow, no head/legs showing.
+Reads as an impenetrable shield. Kawaii, thick outline, transparent background."
+
+  (Optional, for nicer animation later:)
+  A 2-4 frame 'shell slam / block' pose sheet, and a 'walk' cycle — same framing
+  as the Matsya sheets (uniform cells, transparent).
+
+--------------------------------------------------------------------------------
+ENEMIES / HAZARDS
+--------------------------------------------------------------------------------
+[rock]  (~64x60)
+"Chibi cute chunky boulder tumbling from the mountain: rounded grey-brown rock
+with soft facets and a couple of cracks. A hazard but toylike. Transparent bg."
+
+[poison]  (~72x72)  — halahala poison
+"Chibi cute toxic poison blob: a glowing acid-green gas cloud with a couple of
+dark bubbles and a faint skull hint, semi-transparent edges. Ominous but cute.
+Transparent bg."
+
+[asura]  (~200x200)  — Rahu, the demon
+"Chibi cute-but-menacing asura demon head (Rahu/Svarbhanu): big round dark
+magenta-purple head, two curved horns, huge angry yellow eyes, a fanged grin.
+Villain but adorable, kawaii boss. Front view, thick outline, transparent bg."
+
+--------------------------------------------------------------------------------
+TREASURES / OBJECTS
+--------------------------------------------------------------------------------
+[treasure]  (~52x56)  — a ratna emerging from the churn
+"Chibi cute treasure: a small gold pot brimming with a glowing blue gem/jewel,
+sparkles, warm gold shine. Kawaii, transparent bg."  (One generic works; a set
+of the 14 ratnas — lotus/Lakshmi, Kamadhenu, Airavata, moon, Kaustubha gem,
+Parijata, conch — would be lovely later.)
+
+[amritaPot]  (~84x96)  — the Kumbha of nectar
+"Chibi cute golden nectar pot (Kumbha of amrita): round gold vessel with a
+glowing pale-gold nectar surface at the mouth, ornate rim, radiant aura. Holy
+and precious but cute. Transparent bg."
+
+--------------------------------------------------------------------------------
+ENVIRONMENT
+--------------------------------------------------------------------------------
+[mandara]  (~260x220)  — Mount Mandara (the churning rod)
+"Chibi cute mountain: a rounded stylized peak with a small snow cap and a couple
+of ridge lines, warm stone colours. Sits at the top as the churning rod.
+Transparent bg."
+
+[vasuki]  (~300x60)  — the serpent rope
+"Chibi cute serpent body segment (Vasuki): a thick wavy purple snake coil with
+soft scales, used as the churning rope wrapped around the mountain. Horizontal,
+tileable-ish, transparent bg."
+
+--------------------------------------------------------------------------------
+BACKGROUND + WORLD CARD
+--------------------------------------------------------------------------------
+[worldKurma]  (landscape ~1774x887 or portrait) — chapter-select card art
+"Chibi storybook scene of the churning of the ocean of milk: Mount Mandara in a
+swirling glowing sea, the serpent Vasuki wrapped around it, devas and asuras
+pulling on each side, golden light rising. Epic and cute."
+
+[bg for the level] — a churning-sea / milky-ocean underwater backdrop (reuses the
+World 1 bg_far/mid/near style if you don't provide one). Optional swirling
+milk-white currents around a central column.
+
+================================================================================
+KEYS USED BY THE CODE (World 2)
+================================================================================
+kurma, kurmaShell, rock, treasure, poison, mandara, vasuki, asura, amritaPot
+(+ optional: worldKurma card art, a level background)
+================================================================================

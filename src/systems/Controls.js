@@ -14,10 +14,14 @@ const JOY_RADIUS = 78;
 const THUMB_RADIUS = 42;
 
 export default class Controls {
-  constructor(scene) {
+  constructor(scene, opts = {}) {
     this.scene = scene;
+    // Button labels (default to Matsya's; other avatars can relabel).
+    this.dashText = opts.dashLabel || 'SURGE';
+    this.attackText = opts.attackLabel || 'TAIL\nWHIP';
     this.vector = { x: 0, y: 0 };
     this._dashQueued = false;
+    this.dashDown = false;
     this._attackQueued = false;
 
     this.joyPointerId = null;
@@ -56,7 +60,7 @@ export default class Controls {
       .setDepth(d)
       .setInteractive({ useHandCursor: true });
     this.dashLabel = this.scene.add
-      .text(GAME_W - 220, GAME_H - 110, 'SURGE', {
+      .text(GAME_W - 220, GAME_H - 110, this.dashText, {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '18px',
         color: '#ffe9b0',
@@ -74,7 +78,7 @@ export default class Controls {
       .setDepth(d)
       .setInteractive({ useHandCursor: true });
     this.atkLabel = this.scene.add
-      .text(GAME_W - 90, GAME_H - 160, 'TAIL\nWHIP', {
+      .text(GAME_W - 90, GAME_H - 160, this.attackText, {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '16px',
         color: '#ffd9d9',
@@ -88,8 +92,11 @@ export default class Controls {
     this.dashBtn.on('pointerdown', (p) => {
       p.event.stopPropagation();
       this._dashQueued = true;
+      this.dashDown = true; // held state (e.g. Kurma's shell)
       this._flash(this.dashBtn);
     });
+    this.dashBtn.on('pointerup', () => (this.dashDown = false));
+    this.dashBtn.on('pointerout', () => (this.dashDown = false));
     this.atkBtn.on('pointerdown', (p) => {
       p.event.stopPropagation();
       this._attackQueued = true;
@@ -166,8 +173,14 @@ export default class Controls {
       dash: Phaser.Input.Keyboard.KeyCodes.SPACE,
       attack: Phaser.Input.Keyboard.KeyCodes.J
     });
-    kb.on('keydown-SPACE', () => (this._dashQueued = true));
+    kb.on('keydown-SPACE', () => { this._dashQueued = true; this.dashDown = true; });
+    kb.on('keyup-SPACE', () => (this.dashDown = false));
     kb.on('keydown-J', () => (this._attackQueued = true));
+  }
+
+  // Is the primary action button currently held (e.g. Kurma's shell)?
+  isDashHeld() {
+    return !!this.dashDown || (this.keys && this.keys.dash && this.keys.dash.isDown);
   }
 
   // Merge keyboard direction into the vector (called each frame).

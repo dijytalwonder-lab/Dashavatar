@@ -27,7 +27,17 @@ export const COLORS = {
   boat: 0x8b5a2b,
   air: 0x7fd7ff,
   hpGreen: 0x4be86b,
-  ink: 0xeaf6ff
+  ink: 0xeaf6ff,
+  // Kurma (Chapter 2 — Churning of the Ocean)
+  kurmaShell: 0x3f7a4a,
+  kurmaShellDark: 0x255030,
+  kurmaSkin: 0x7fae5a,
+  rock: 0x6b6256,
+  poison: 0x6fce3a,
+  treasure: 0xffe08a,
+  mandara: 0x8a7a63,
+  asura: 0x7a2f4a,
+  amrita: 0xfff2b0
 };
 
 // Ability keys — carried forward across chapters via SaveManager.
