@@ -1,0 +1,11 @@
+{
+  "appId": "com.dijytal.dashavatara",
+  "appName": "Dashavatara: Matsya",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

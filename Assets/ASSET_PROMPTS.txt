@@ -1,125 +1,145 @@
 ================================================================================
- DASHAVATARA — CHAPTER 1: MATSYA
- ART ASSET GENERATION PROMPTS
+ DASHAVATARA — WORLD 1: MATSYA (The Great Flood)
+ ART ASSET PROMPTS  —  CHIBI CUTE STYLE
 ================================================================================
 
+STYLE: All assets are CHIBI CUTE — big heads, tiny bodies, oversized sparkly
+eyes, soft rounded shapes, chubby proportions, gentle pastel-on-deep-blue
+palette, thick clean outlines, soft cel shading, adorable and friendly (even the
+demon is a "cute-scary" chibi). Mobile game sprite art. Think "kawaii mythology."
+
 The game currently runs on PROCEDURAL placeholder art (drawn in code, no image
-files). To replace it with real art, generate the images below and drop them
-into:   public/images/<name>.png
+files). To use these instead:
+  1. Generate each image below as a transparent PNG.
+  2. Save it as   public/images/<key>.png   (key is in [brackets]).
+  3. In src/scenes/PreloadScene.js -> preload(), load it, e.g.
+        this.load.image('matsya', 'images/matsya.png');
+  4. Delete the matching block in src/systems/Textures.js so the real art wins.
+Runtime keys must stay EXACTLY as listed. Keep the same facing direction.
 
-Then in src/scenes/PreloadScene.js, inside preload(), load each one under the
-SAME key the game already uses, e.g.:
-
-    this.load.image('matsya',   'images/matsya.png');
-    this.load.image('enemyFish','images/enemyFish.png');
-    ...
-
-...and delete the matching block in src/systems/Textures.js so the real image
-wins. Runtime keys must stay identical (listed in [brackets] below).
-
-GLOBAL STYLE
-- 2D mobile game, mythic Hindu art, painterly but clean, high contrast so
-  sprites pop against a deep-blue underwater background.
-- Consistent lighting from top. Soft rim light in cyan/gold.
-- Transparent background (PNG with alpha). No drop shadows baked in.
-- Palette: deep teal water (#041627 → #146c94), sacred gold (#ffd257),
-  Matsya teal (#3fc1c9), demon purple (#8a2be2).
+GLOBAL RULES FOR EVERY PROMPT
+- 2D chibi sprite, front-or-side as noted, centered, transparent background.
+- Thick rounded outlines, soft shading, big cute eyes, no text, no watermark.
+- Consistent top light, subtle cyan/gold rim light.
+- Palette anchors: deep teal water (#041627→#146c94), sacred gold (#ffd257),
+  Matsya teal (#3fc1c9), demon purple (#8a2be2), pastel accents.
+- No baked drop shadow (the engine adds glow/shadows).
 
 --------------------------------------------------------------------------------
-CHARACTERS
+HERO
 --------------------------------------------------------------------------------
 
 [matsya]  (~96x60, faces RIGHT)
-A divine golden-teal fish, Vishnu's first avatar. Sleek body, elegant flowing
-fins, a subtle golden halo/aura, one large expressive eye, a small gold crown
-motif or tilak on the head. Heroic and graceful. Side view, swimming pose.
+"Chibi cute divine fish, Vishnu's Matsya avatar. Big round sparkly eyes, tiny
+smiling mouth, chubby teal body with a soft golden belly, little flowing fins,
+a teeny gold crown and a small gold tilak on the forehead, gentle glowing halo.
+Adorable, heroic, kawaii mascot. Side view swimming pose, thick outline,
+transparent background."
 
-[boss]  (~220x220)  — Hayagriva, the demon
-A menacing HORSE-HEADED demon rising from dark water. Elongated equine skull,
-glowing red eyes, a mane of purple spectral flame, dark muscular torso dissolving
-into shadow/water at the base. Holds a glowing bundle of sacred scrolls (the
-stolen Vedas). Terrifying but mythic, not gory. Front view.
+--------------------------------------------------------------------------------
+VILLAIN
+--------------------------------------------------------------------------------
+
+[boss]  (~220x220)  — Hayagriva (cute-scary)
+"Chibi cute-but-menacing horse-headed water demon, Hayagriva. Big blocky head
+with a stubby snout, tiny sharp fangs, huge glowing red puppy-like eyes, a fluffy
+mane of soft purple flames, a small chubby dark-purple body fading into water,
+hugging a glowing bundle of golden scrolls. Villain but adorable, kawaii boss.
+Front view, thick outline, transparent background."
+
+--------------------------------------------------------------------------------
+RESCUES / COLLECTIBLES
+--------------------------------------------------------------------------------
 
 [sage]  (~64x64)
-An elderly rishi (sage) with white beard, saffron/ochre robe, calm face, hands
-in prayer, enclosed in a translucent rescue air-bubble. Gentle glow.
+"Chibi cute elderly rishi sage: giant round head, tiny body, closed happy eyes,
+big fluffy white beard, little saffron robe, tiny hands pressed in namaste,
+floating inside a shiny translucent bubble. Wholesome and adorable, kawaii.
+Front view, thick outline, transparent background."
+
+[seed]  (~32x40)
+"Chibi cute sacred seed sprite: a plump smiling seed with rosy cheeks, one tiny
+green sprout leaf on top, soft golden glow, big happy eyes. Kawaii, thick
+outline, transparent background."
+
+[animal]  (~56x48, faces RIGHT)
+"Chibi cute baby deer/fawn: oversized head, big teary sparkly eyes, tiny wobbly
+legs, little white spots, soft orange-brown fur, worried adorable expression
+(being rescued from the flood). Side view, kawaii, thick outline, transparent
+background."
+
+[scroll]  (~40x44)  — a Veda fragment (STAR collectible)
+"Chibi cute ancient Veda scroll: a small rolled golden-capped parchment with a
+tiny happy face, glowing warm golden aura, faint sacred glyphs, sparkles. Feels
+precious and holy but adorable, kawaii. Thick outline, transparent background."
+
+[airPocket]  (~80x80)
+"Chibi cute cluster of breathable air bubbles: a few chubby round bubbles with
+tiny highlights and one with a teeny smiling face, cyan-white, translucent,
+inviting sparkle. Kawaii, transparent background."
 
 --------------------------------------------------------------------------------
 ENEMIES
 --------------------------------------------------------------------------------
 
 [enemyFish]  (~72x48, faces LEFT)
-An aggressive predator fish, deep red, sharp teeth, angry yellow eye, spiky fins.
-Clearly a threat. Side view.
+"Chibi cute-angry piranha: big round head, puffy cheeks, tiny grumpy frown with
+little fangs, big annoyed eyes, chubby deep-red body, spiky little fins. A
+'baddie' but adorable. Side view, kawaii, thick outline, transparent background."
 
 [eel]  (~100x36, faces RIGHT)
-A long purple electric eel, sinuous S-curve body, glowing yellow eye, faint
-electric sparks along the spine. Side view.
-
---------------------------------------------------------------------------------
-COLLECTIBLES / PICKUPS
---------------------------------------------------------------------------------
-
-[seed]  (~32x40)
-A single glowing sacred seed/sprout, green, with a tiny leaf, soft golden glow —
-"the seed of every plant" Manu must save.
-
-[animal]  (~56x48, faces RIGHT)
-A small stranded land creature (a young deer or calf), warm orange-brown,
-frightened pose, side view — a creature being rescued from the flood.
-
-[scroll]  (~40x44)  — a Veda fragment (STAR collectible)
-An ancient rolled palm-leaf/parchment scroll bound with gold caps, faint Sanskrit
-glyphs, radiant golden aura. Feels holy and precious.
-
-[airPocket]  (~80x80)
-A shimmering cluster of breathable air bubbles trapped underwater, cyan-white,
-translucent, inviting.
+"Chibi cute electric eel: long wiggly noodle body in soft purple, big goofy
+sparkly eyes, tiny mouth, little zappy sparkles along the back, mischievous
+adorable look. Side view, kawaii, thick outline, transparent background."
 
 --------------------------------------------------------------------------------
 ENVIRONMENT / PROPS
 --------------------------------------------------------------------------------
 
 [boat]  (~160x90)  — Manu's boat
-A simple ancient wooden ark/boat with a single mast and a pale sail, viewed from
-the side, riding on the surface. Sturdy, weathered wood.
+"Chibi cute wooden ark: a stubby round little boat with a single mast and a puffy
+cream sail, rounded chunky planks, cozy and toylike, riding gently on water.
+Side view, kawaii, thick outline, transparent background."
 
 [coral]  (~72x64)
-A cluster of sharp pink/magenta spike coral, hazardous, jagged tips. Bottom-
-anchored (also used flipped as ceiling spikes).
+"Chibi cute spiky coral cluster: rounded chubby pink-magenta coral spikes with
+soft highlights, a little bit pointy (hazard) but still cute and squishy-looking.
+Bottom-anchored. Kawaii, thick outline, transparent background."
 
 [weakpoint]  (~48x48)
-A glowing targeting reticle — gold ring with crosshairs and a red core — shown on
-the boss when he is stunned. Clean UI/VFX style.
+"Cute glowing target reticle: a rounded gold ring with soft crosshairs and a
+sparkling red core, kawaii UI style, transparent background."
 
 [glow]  (~128x128)
-A soft radial glow sprite, white-hot center fading through gold to transparent.
-Used for auras, pickups, the sanctuary gate. Additive-blend friendly.
+"Soft radial glow orb, white-hot center fading through warm gold to transparent.
+Dreamy, additive-blend friendly, no outline, transparent background."
 
 [bubble]  (~16x16)
-A single small water bubble with a white highlight. Semi-transparent. Used for
-trails and particles (keep it tiny and simple).
+"Tiny cute round water bubble with a single white highlight, semi-transparent,
+kawaii, transparent background."
 
 --------------------------------------------------------------------------------
-OPTIONAL BACKGROUND ART (parallax layers)
+BACKGROUND (optional parallax layers, chibi storybook feel)
 --------------------------------------------------------------------------------
-- bg_far:   distant murky deep-sea gradient with faint light rays from above.
-- bg_mid:   silhouetted rocks / kelp / sunken ruins, blue-grey.
-- bg_near:  foreground seaweed / debris drifting, slightly blurred.
-Each 1280x720 (or wider, tileable horizontally), PNG.
+- bg_far   (1280x720+, tileable): dreamy deep-sea gradient, soft light rays,
+           faint round bubbles. Storybook chibi mood.
+- bg_mid   (tileable): cute rounded silhouettes of rocks, wavy kelp and a little
+           sunken temple, soft blue-grey.
+- bg_near  (tileable): chunky cute seaweed and drifting bubbles in the foreground.
 
 --------------------------------------------------------------------------------
-APP ICON & STORE ART (for the Android build)
+APP ICON & STORE ART (chibi cute)
 --------------------------------------------------------------------------------
-[app_icon]      1024x1024  — Matsya the golden fish on a deep-blue radial burst,
-                             centered, bold, readable at small sizes. No text.
-[splash]        2732x2732  — Matsya rising through the flood with the title
-                             "DASHAVATARA — Matsya" in gold serif, safe-area centered.
-[feature_graphic] 1024x500 — Matsya vs. the silhouette of Hayagriva across a
-                             stormy sea, cinematic, room for the title on the left.
+[app_icon]        1024x1024 : chibi Matsya (cute crowned fish) beaming on a deep
+                              blue radial burst, centered, bold, no text.
+[splash]          2732x2732 : chibi Matsya rising happily through gentle flood
+                              waters, sparkles, safe-area centered, no text or
+                              minimal gold title.
+[feature_graphic] 1024x500  : chibi Matsya facing a chibi cute-scary Hayagriva
+                              across a cartoon sea, playful, room for title left.
 
 ================================================================================
-NAMING CHECKLIST (all keys used by the code)
+KEY CHECKLIST (every runtime key used by World 1)
 ================================================================================
 matsya, boss, sage, enemyFish, eel, seed, animal, scroll, airPocket, boat,
 coral, weakpoint, glow, bubble
