@@ -1,0 +1,22 @@
+{
+  "name": "dashavatara-ch1-matsya",
+  "version": "1.0.0",
+  "description": "Dashavatara: The Ten Avatars — Chapter 1: Matsya (The Great Flood)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "cap:sync": "cap sync android",
+    "cap:copy": "cap copy android"
+  },
+  "dependencies": {
+    "phaser": "^3.80.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.10",
+    "@capacitor/cli": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/android": "^6.2.1"
+  }
+}
