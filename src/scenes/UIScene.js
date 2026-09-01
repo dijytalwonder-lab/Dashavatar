@@ -15,15 +15,13 @@ export default class UIScene extends Phaser.Scene {
   }
 
   create() {
-    // Pause button (top-left)
-    this._pauseBtn = this.add.container(34, 36);
-    const pbBg = this.add.circle(0, 0, 24, 0x00121f, 0.55).setStrokeStyle(2, COLORS.air, 0.6);
-    const pbIcon = this.add.text(0, -1, '❚❚', { fontFamily: 'system-ui', fontSize: '18px', color: '#bdf0ff', fontStyle: 'bold' }).setOrigin(0.5);
-    this._pauseBtn.add([pbBg, pbIcon]);
-    pbBg.setInteractive(new Phaser.Geom.Circle(0, 0, 26), Phaser.Geom.Circle.Contains)
-      .on('pointerdown', () => this._pauseBtn.setScale(0.9))
-      .on('pointerup', () => { this._pauseBtn.setScale(1); this._openPause(); })
-      .on('pointerout', () => this._pauseBtn.setScale(1));
+    // Pause button (top-left) — ornate art
+    const pb = this.add.image(42, 42, 'pauseBtn').setInteractive({ useHandCursor: true });
+    const pbBase = 58 / pb.width;
+    pb.setScale(pbBase);
+    pb.on('pointerdown', () => pb.setScale(pbBase * 0.9))
+      .on('pointerup', () => { pb.setScale(pbBase); this._openPause(); })
+      .on('pointerout', () => pb.setScale(pbBase));
 
     // Health hearts (shifted right of the pause button)
     this.hearts = [];

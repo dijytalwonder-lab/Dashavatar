@@ -63,6 +63,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btnPlay', 'images/btnPlay.png');
     this.load.image('btnChapters', 'images/btnChapters.png');
     this.load.image('btnSettings', 'images/btnSettings.png');
+    this.load.image('pauseBtn', 'images/pauseBtn.png');
+    this.load.image('lockedWorld', 'images/lockedWorld.png');
   }
 
   create() {

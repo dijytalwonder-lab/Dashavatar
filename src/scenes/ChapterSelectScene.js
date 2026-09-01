@@ -56,11 +56,11 @@ export default class ChapterSelectScene extends Phaser.Scene {
       fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#7fb0cf', fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    // Locked grid (worlds 2-10)
-    const cols = 3, tileW = 205, tileH = 172, gx = 18, gy = 18;
+    // Locked grid (worlds 2-10) — ornate padlock plaques
+    const cols = 3, tileW = 214, tileH = 150, gx = 8, gy = 14;
     const gridW = cols * tileW + (cols - 1) * gx;
     const startX = (GAME_W - gridW) / 2 + tileW / 2;
-    const startY = 668;
+    const startY = 646;
     WORLDS.slice(1).forEach((w, i) => {
       const cx = startX + (i % cols) * (tileW + gx);
       const cy = startY + Math.floor(i / cols) * (tileH + gy);
@@ -156,30 +156,28 @@ export default class ChapterSelectScene extends Phaser.Scene {
     this.tweens.add({ targets: frame, alpha: { from: 1, to: 0.6 }, duration: 1200, yoyo: true, repeat: -1 });
   }
 
-  // ---- Locked tile (Worlds 2-10) ----
+  // ---- Locked tile (Worlds 2-10) — ornate locked-world plaque ----
   _lockedTile(w, cx, cy, tw, th) {
     const g = this.add.container(cx, cy);
-    const bg = this.add.rectangle(0, 0, tw, th, 0x0a2233, 0.82).setStrokeStyle(2, 0x2a4a5a, 0.7);
-    g.add(bg);
 
-    // faded emoji medallion
-    g.add(this.add.circle(0, -34, 30, 0x0e2a3a, 0.9).setStrokeStyle(2, 0x33586a, 0.6));
-    g.add(this.add.text(0, -34, w.emoji, { fontSize: '30px' }).setOrigin(0.5).setAlpha(0.4));
+    // The padlock sign fills the tile width
+    const sign = this.add.image(0, -8, 'lockedWorld');
+    sign.setScale((tw + 8) / sign.width);
+    g.add(sign);
+    const sh = sign.displayHeight;
 
-    // number + name (greyed)
-    g.add(this.add.text(0, 12, `${w.n}. ${w.name}`, {
-      fontFamily: 'Georgia, serif', fontSize: '19px', color: '#5b7686', fontStyle: 'bold'
-    }).setOrigin(0.5));
-    g.add(this.add.text(0, 36, w.tag, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#41586a', align: 'center',
-      wordWrap: { width: tw - 24 }
+    // "WORLD N" on the top wooden area (above the padlock)
+    g.add(this.add.text(0, -sh * 0.16, `WORLD ${w.n}`, {
+      fontFamily: 'Georgia, serif', fontSize: '15px', color: '#5a3a12', fontStyle: 'bold'
     }).setOrigin(0.5));
 
-    // lock
-    g.add(this.add.text(0, 64, '🔒', { fontSize: '22px' }).setOrigin(0.5).setAlpha(0.75));
+    // Avatar name below the sign, with a faded emoji
+    g.add(this.add.text(0, sh / 2 - 2, `${w.emoji} ${w.name}`, {
+      fontFamily: 'Georgia, serif', fontSize: '18px', color: '#cdae6a', fontStyle: 'bold'
+    }).setOrigin(0.5, 0));
 
-    bg.setInteractive({ useHandCursor: false });
-    bg.on('pointerdown', () => {
+    sign.setInteractive({ useHandCursor: false });
+    sign.on('pointerdown', () => {
       AudioManager.hit();
       this._shake(g, cx);
       this._toast(`🔒 ${w.emoji} ${w.name} — coming soon`);

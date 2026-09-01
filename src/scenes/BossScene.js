@@ -324,14 +324,13 @@ export default class BossScene extends Phaser.Scene {
   // ---------------- HUD ----------------
 
   _buildHud() {
-    // Pause button (top-left)
-    const pb = this.add.container(34, 36).setScrollFactor(0).setDepth(500);
-    const pbBg = this.add.circle(0, 0, 24, 0x00121f, 0.55).setStrokeStyle(2, 0xc98aff, 0.6);
-    pb.add([pbBg, this.add.text(0, -1, '❚❚', { fontFamily: 'system-ui', fontSize: '18px', color: '#e0c8ff', fontStyle: 'bold' }).setOrigin(0.5)]);
-    pbBg.setInteractive(new Phaser.Geom.Circle(0, 0, 26), Phaser.Geom.Circle.Contains)
-      .on('pointerdown', () => pb.setScale(0.9))
-      .on('pointerup', () => { pb.setScale(1); this._openPause(); })
-      .on('pointerout', () => pb.setScale(1));
+    // Pause button (top-left) — ornate art
+    const pb = this.add.image(42, 42, 'pauseBtn').setScrollFactor(0).setDepth(500).setInteractive({ useHandCursor: true });
+    const pbBase = 58 / pb.width;
+    pb.setScale(pbBase);
+    pb.on('pointerdown', () => pb.setScale(pbBase * 0.9))
+      .on('pointerup', () => { pb.setScale(pbBase); this._openPause(); })
+      .on('pointerout', () => pb.setScale(pbBase));
 
     this.hearts = [];
     for (let i = 0; i < TUNING.maxHealth; i++) {
