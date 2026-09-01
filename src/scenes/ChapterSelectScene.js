@@ -1,23 +1,22 @@
 import Phaser from 'phaser';
 import { GAME_W, GAME_H, COLORS } from '../config.js';
-import { makeWaterBackground } from '../systems/Background.js';
 import AudioManager from '../systems/AudioManager.js';
 import SaveManager from '../systems/SaveManager.js';
 
-// The ten worlds of the campaign. Only Chapter 1 (Matsya) is playable so far;
-// the rest are placeholders that unlock as the story is built out. A chapter
-// unlocks when the PREVIOUS chapter has been completed.
-const CHAPTERS = [
-  { n: 1,  emoji: '🐟', name: 'Matsya',       tag: 'Swimming + Rescue',        playable: true },
-  { n: 2,  emoji: '🐢', name: 'Kurma',        tag: 'Defense + Survival',       playable: false },
-  { n: 3,  emoji: '🐗', name: 'Varaha',       tag: 'Exploration + Boss Combat',playable: false },
-  { n: 4,  emoji: '🦁', name: 'Narasimha',    tag: 'Action Combat',            playable: false },
-  { n: 5,  emoji: '👣', name: 'Vamana',       tag: 'Puzzle + Strategy',        playable: false },
-  { n: 6,  emoji: '🪓', name: 'Parashurama',  tag: 'Weapon Combat',            playable: false },
-  { n: 7,  emoji: '🏹', name: 'Rama',         tag: 'Archery + Adventure',      playable: false },
-  { n: 8,  emoji: '🪈', name: 'Krishna',      tag: 'Strategy + Choices',       playable: false },
-  { n: 9,  emoji: '🧘', name: 'Buddha',       tag: 'Exploration + Morals',     playable: false },
-  { n: 10, emoji: '⚔️', name: 'Kalki',        tag: 'Epic Final Battle',        playable: false }
+// The ten worlds. World 1 (Matsya) is a large featured card built from real art;
+// the rest are locked tiles awaiting their own assets. A world unlocks when the
+// previous one is completed, but only Chapter 1 is playable so far.
+const WORLDS = [
+  { n: 1,  emoji: '🐟', name: 'Matsya',      sub: 'The Great Flood',   tag: 'Swimming + Rescue',         art: 'worldMatsya', playable: true },
+  { n: 2,  emoji: '🐢', name: 'Kurma',       sub: 'The Churning Sea',  tag: 'Defense + Survival' },
+  { n: 3,  emoji: '🐗', name: 'Varaha',      sub: 'The Sunken Earth',  tag: 'Exploration + Boss' },
+  { n: 4,  emoji: '🦁', name: 'Narasimha',   sub: 'The Pillar',        tag: 'Action Combat' },
+  { n: 5,  emoji: '👣', name: 'Vamana',      sub: 'Three Steps',       tag: 'Puzzle + Strategy' },
+  { n: 6,  emoji: '🪓', name: 'Parashurama', sub: 'The Warrior',       tag: 'Weapon Combat' },
+  { n: 7,  emoji: '🏹', name: 'Rama',        sub: 'The Exile',         tag: 'Archery + Adventure' },
+  { n: 8,  emoji: '🪈', name: 'Krishna',     sub: 'The Charioteer',    tag: 'Strategy + Choices' },
+  { n: 9,  emoji: '🧘', name: 'Buddha',      sub: 'The Awakening',     tag: 'Exploration + Morals' },
+  { n: 10, emoji: '⚔️', name: 'Kalki',       sub: 'The Final Age',     tag: 'Epic Final Battle' }
 ];
 
 export default class ChapterSelectScene extends Phaser.Scene {
@@ -27,32 +26,50 @@ export default class ChapterSelectScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.fadeIn(300, 0, 8, 20);
-    makeWaterBackground(this);
+
+    // Deep underwater base + dim
+    const bg = this.add.image(GAME_W / 2, GAME_H / 2, 'bgFar').setDepth(-10);
+    bg.setScale(Math.max(GAME_W / bg.width, GAME_H / bg.height)).setTint(0x35618a);
+    this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x03121f, 0.55).setDepth(-9);
 
     // Header
-    this.add.text(GAME_W / 2, 70, 'CHOOSE YOUR WORLD', {
+    this.add.text(GAME_W / 2, 58, 'CHOOSE YOUR WORLD', {
       fontFamily: 'Georgia, serif', fontSize: '34px', color: '#ffd257', fontStyle: 'bold'
-    }).setOrigin(0.5);
-    this.add.text(GAME_W / 2, 108, 'Each avatar teaches an ability that carries forward', {
+    }).setOrigin(0.5).setShadow(0, 3, '#00131f', 6);
+    this.add.text(GAME_W / 2, 96, 'Ten avatars · one connected journey', {
       fontFamily: 'system-ui, sans-serif', fontSize: '15px', color: '#9bd7ef'
     }).setOrigin(0.5);
 
     // Back button
-    this.add.text(28, 40, '‹ BACK', {
+    this.add.text(26, 40, '‹ BACK', {
       fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#9bd7ef'
     }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true }).on('pointerdown', () => {
       AudioManager.click();
       this.scene.start('MainMenu');
     });
 
-    // Chapter rows
-    const top = 165;
-    const rowH = 104;
-    CHAPTERS.forEach((ch, i) => this._row(ch, top + i * rowH));
+    // Featured world 1 card
+    this._featuredCard(WORLDS[0], GAME_W / 2, 320);
 
-    // Toast line
-    this.toast = this.add.text(GAME_W / 2, GAME_H - 26, '', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '17px', color: '#ffb3b3'
+    // "More Worlds" divider
+    this.add.text(GAME_W / 2, 548, 'MORE WORLDS', {
+      fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#7fb0cf', fontStyle: 'bold'
+    }).setOrigin(0.5);
+
+    // Locked grid (worlds 2-10)
+    const cols = 3, tileW = 205, tileH = 172, gx = 18, gy = 18;
+    const gridW = cols * tileW + (cols - 1) * gx;
+    const startX = (GAME_W - gridW) / 2 + tileW / 2;
+    const startY = 668;
+    WORLDS.slice(1).forEach((w, i) => {
+      const cx = startX + (i % cols) * (tileW + gx);
+      const cy = startY + Math.floor(i / cols) * (tileH + gy);
+      this._lockedTile(w, cx, cy, tileW, tileH);
+    });
+
+    // Toast
+    this.toast = this.add.text(GAME_W / 2, GAME_H - 24, '', {
+      fontFamily: 'system-ui, sans-serif', fontSize: '17px', color: '#ffd9a0'
     }).setOrigin(0.5).setAlpha(0);
   }
 
@@ -62,77 +79,120 @@ export default class ChapterSelectScene extends Phaser.Scene {
     return !!(prev && prev.completed);
   }
 
-  _row(ch, y) {
-    const unlocked = this._isUnlocked(ch.n);
-    const done = SaveManager.data.chapters[ch.n] && SaveManager.data.chapters[ch.n].completed;
-    const w = GAME_W - 60;
+  // ---- Featured card (World 1) ----
+  _featuredCard(w, cx, cy) {
+    const cardW = 664, cardH = 380;
+    const done = SaveManager.data.chapters[1] && SaveManager.data.chapters[1].completed;
 
-    const g = this.add.container(GAME_W / 2, y);
-    const bg = this.add
-      .rectangle(0, 0, w, 92, unlocked ? 0x0a3a5c : 0x0a2233, unlocked ? 0.85 : 0.55)
-      .setStrokeStyle(2, unlocked ? COLORS.gold : 0x2a4a5a, unlocked ? 0.8 : 0.5);
-    g.add(bg);
+    const g = this.add.container(cx, cy);
 
-    // Avatar emoji medallion
-    const medal = this.add.circle(-w / 2 + 55, 0, 34, unlocked ? 0x146c94 : 0x0e2a3a, 0.9)
-      .setStrokeStyle(2, unlocked ? COLORS.air : 0x33586a, 0.7);
-    const emoji = this.add.text(-w / 2 + 55, 0, ch.emoji, { fontSize: '34px' }).setOrigin(0.5);
-    if (!unlocked) emoji.setAlpha(0.35);
-    g.add([medal, emoji]);
+    // Art, cover-cropped to the card
+    const img = this.add.image(0, 0, w.art);
+    const tex = this.textures.get(w.art).getSourceImage();
+    const scale = Math.max(cardW / tex.width, cardH / tex.height);
+    const cropW = cardW / scale, cropH = cardH / scale;
+    img.setCrop((tex.width - cropW) / 2, (tex.height - cropH) / 2, cropW, cropH);
+    img.setScale(scale);
+    g.add(img);
 
-    // Title + tag
-    const titleColor = unlocked ? '#eaf6ff' : '#5b7686';
-    const title = this.add.text(-w / 2 + 105, -16, `${ch.n}. ${ch.name}`, {
-      fontFamily: 'Georgia, serif', fontSize: '26px', color: titleColor, fontStyle: 'bold'
-    }).setOrigin(0, 0.5);
-    const tag = this.add.text(-w / 2 + 105, 16, ch.tag, {
-      fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: unlocked ? '#9bd7ef' : '#4a6575'
-    }).setOrigin(0, 0.5);
-    g.add([title, tag]);
+    // Bottom gradient for text legibility
+    const grad = this.add.graphics();
+    grad.fillGradientStyle(0x000000, 0x000000, 0x00121f, 0x00121f, 0, 0, 0.9, 0.9);
+    grad.fillRect(-cardW / 2, cardH / 2 - 150, cardW, 150);
+    g.add(grad);
 
-    // Status marker on the right
-    let marker;
+    // Frame
+    const frame = this.add.rectangle(0, 0, cardW, cardH).setStrokeStyle(4, COLORS.gold, 0.95);
+    g.add(frame);
+
+    // World tag (top-left)
+    const tag = this.add.container(-cardW / 2 + 62, -cardH / 2 + 34);
+    tag.add(this.add.rectangle(0, 0, 108, 40, 0x00121f, 0.7).setStrokeStyle(2, COLORS.gold, 0.8));
+    tag.add(this.add.text(0, 0, 'WORLD 1', { fontFamily: 'system-ui', fontSize: '17px', color: '#ffd257', fontStyle: 'bold' }).setOrigin(0.5));
+    g.add(tag);
+
+    // Status badge (top-right)
     if (done) {
-      marker = this.add.text(w / 2 - 40, 0, '✓', { fontSize: '34px', color: '#4be86b', fontStyle: 'bold' }).setOrigin(0.5);
-    } else if (unlocked) {
-      marker = this.add.text(w / 2 - 40, 0, '▶', { fontSize: '30px', color: '#ffd257' }).setOrigin(0.5);
-    } else {
-      marker = this.add.text(w / 2 - 40, 0, '🔒', { fontSize: '28px' }).setOrigin(0.5).setAlpha(0.7);
+      const b = this.add.container(cardW / 2 - 44, -cardH / 2 + 34);
+      b.add(this.add.circle(0, 0, 22, 0x1a3a2a, 0.85).setStrokeStyle(2, COLORS.hpGreen, 0.9));
+      b.add(this.add.text(0, 0, '✓', { fontSize: '26px', color: '#4be86b', fontStyle: 'bold' }).setOrigin(0.5));
+      g.add(b);
     }
-    g.add(marker);
 
-    // Interaction
-    bg.setInteractive({ useHandCursor: unlocked });
-    bg.on('pointerover', () => unlocked && g.setScale(1.02));
-    bg.on('pointerout', () => g.setScale(1));
-    bg.on('pointerdown', () => {
-      if (!unlocked) {
-        AudioManager.hit();
-        this._shake(g);
-        this._showToast(`🔒 Complete Chapter ${ch.n - 1} to unlock ${ch.name}`);
-        return;
-      }
+    // Titles (bottom-left)
+    g.add(this.add.text(-cardW / 2 + 26, cardH / 2 - 96, `${w.emoji}  ${w.name}`, {
+      fontFamily: 'Georgia, serif', fontSize: '40px', color: '#ffffff', fontStyle: 'bold'
+    }).setOrigin(0, 0.5).setShadow(0, 2, '#000', 6));
+    g.add(this.add.text(-cardW / 2 + 28, cardH / 2 - 58, w.sub, {
+      fontFamily: 'system-ui, sans-serif', fontSize: '19px', color: '#bfe6ff', fontStyle: 'italic'
+    }).setOrigin(0, 0.5));
+    g.add(this.add.text(-cardW / 2 + 28, cardH / 2 - 30, `⚔ ${w.tag}`, {
+      fontFamily: 'system-ui, sans-serif', fontSize: '16px', color: '#9bd7ef'
+    }).setOrigin(0, 0.5));
+
+    // Play badge (bottom-right)
+    const play = this.add.container(cardW / 2 - 92, cardH / 2 - 60);
+    const pbg = this.add.rectangle(0, 0, 140, 62, COLORS.gold, 0.95).setStrokeStyle(3, 0xfff2cc, 0.9);
+    play.add(pbg);
+    play.add(this.add.text(0, 0, done ? 'REPLAY' : 'PLAY  ▶', {
+      fontFamily: 'system-ui, sans-serif', fontSize: done ? '22px' : '24px', color: '#00263a', fontStyle: 'bold'
+    }).setOrigin(0.5));
+    g.add(play);
+
+    // Whole card is tappable
+    frame.setInteractive(new Phaser.Geom.Rectangle(-cardW / 2, -cardH / 2, cardW, cardH), Phaser.Geom.Rectangle.Contains);
+    frame.on('pointerover', () => g.setScale(1.015));
+    frame.on('pointerout', () => g.setScale(1));
+    frame.on('pointerdown', () => g.setScale(0.99));
+    frame.on('pointerup', () => {
+      g.setScale(1);
+      AudioManager.unlock();
       AudioManager.click();
-      if (ch.playable) {
-        // Chapter 1 -> its story intro, then the level
-        this.cameras.main.fadeOut(300, 0, 8, 20);
-        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Story'));
-      } else {
-        this._showToast(`${ch.emoji} ${ch.name} — coming soon!`);
-      }
+      this.cameras.main.fadeOut(300, 0, 8, 20);
+      this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Story'));
     });
 
-    return g;
+    // gentle glow pulse on the frame
+    this.tweens.add({ targets: frame, alpha: { from: 1, to: 0.6 }, duration: 1200, yoyo: true, repeat: -1 });
   }
 
-  _shake(obj) {
-    const x0 = obj.x;
-    this.tweens.add({ targets: obj, x: x0 - 8, duration: 50, yoyo: true, repeat: 3, onComplete: () => (obj.x = x0) });
+  // ---- Locked tile (Worlds 2-10) ----
+  _lockedTile(w, cx, cy, tw, th) {
+    const g = this.add.container(cx, cy);
+    const bg = this.add.rectangle(0, 0, tw, th, 0x0a2233, 0.82).setStrokeStyle(2, 0x2a4a5a, 0.7);
+    g.add(bg);
+
+    // faded emoji medallion
+    g.add(this.add.circle(0, -34, 30, 0x0e2a3a, 0.9).setStrokeStyle(2, 0x33586a, 0.6));
+    g.add(this.add.text(0, -34, w.emoji, { fontSize: '30px' }).setOrigin(0.5).setAlpha(0.4));
+
+    // number + name (greyed)
+    g.add(this.add.text(0, 12, `${w.n}. ${w.name}`, {
+      fontFamily: 'Georgia, serif', fontSize: '19px', color: '#5b7686', fontStyle: 'bold'
+    }).setOrigin(0.5));
+    g.add(this.add.text(0, 36, w.tag, {
+      fontFamily: 'system-ui, sans-serif', fontSize: '12px', color: '#41586a', align: 'center',
+      wordWrap: { width: tw - 24 }
+    }).setOrigin(0.5));
+
+    // lock
+    g.add(this.add.text(0, 64, '🔒', { fontSize: '22px' }).setOrigin(0.5).setAlpha(0.75));
+
+    bg.setInteractive({ useHandCursor: false });
+    bg.on('pointerdown', () => {
+      AudioManager.hit();
+      this._shake(g, cx);
+      this._toast(`🔒 ${w.emoji} ${w.name} — coming soon`);
+    });
   }
 
-  _showToast(msg) {
+  _shake(obj, x0) {
+    this.tweens.add({ targets: obj, x: x0 - 6, duration: 45, yoyo: true, repeat: 3, onComplete: () => (obj.x = x0) });
+  }
+
+  _toast(msg) {
     this.toast.setText(msg).setAlpha(1);
     this.tweens.killTweensOf(this.toast);
-    this.tweens.add({ targets: this.toast, alpha: 0, delay: 1800, duration: 600 });
+    this.tweens.add({ targets: this.toast, alpha: 0, delay: 1600, duration: 600 });
   }
 }

@@ -56,6 +56,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('bgFar', 'images/bgFar.jpg');
     this.load.image('bgMid', 'images/bgMid.jpg');
     this.load.image('bgNear', 'images/bgNear.jpg');
+    this.load.image('worldMatsya', 'images/worldMatsya.jpg'); // chapter-select card art
     // UI
     this.load.image('menuBg', 'images/menuBg.png');
     this.load.image('logo', 'images/logo.png');
