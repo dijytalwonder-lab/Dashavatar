@@ -18,6 +18,9 @@ import Ending2Scene from './scenes/Ending2Scene.js';
 import Story3Scene from './scenes/Story3Scene.js';
 import Level3Scene from './scenes/Level3Scene.js';
 import Ending3Scene from './scenes/Ending3Scene.js';
+import Story4Scene from './scenes/Story4Scene.js';
+import Level4Scene from './scenes/Level4Scene.js';
+import Ending4Scene from './scenes/Ending4Scene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -60,7 +63,10 @@ const config = {
     Ending2Scene,
     Story3Scene,
     Level3Scene,
-    Ending3Scene
+    Ending3Scene,
+    Story4Scene,
+    Level4Scene,
+    Ending4Scene
   ]
 };
 

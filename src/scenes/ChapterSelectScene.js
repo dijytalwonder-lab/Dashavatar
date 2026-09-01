@@ -10,7 +10,7 @@ const WORLDS = [
   { n: 1,  emoji: '🐟', name: 'Matsya',      sub: 'The Great Flood',   tag: 'Swimming + Rescue',         art: 'worldMatsya', playable: true },
   { n: 2,  emoji: '🐢', name: 'Kurma',       sub: 'The Churning Sea',  tag: 'Defense + Survival', story: 'Story2' },
   { n: 3,  emoji: '🐗', name: 'Varaha',      sub: 'The Sunken Earth',  tag: 'Exploration + Boss', story: 'Story3' },
-  { n: 4,  emoji: '🦁', name: 'Narasimha',   sub: 'The Pillar',        tag: 'Action Combat' },
+  { n: 4,  emoji: '🦁', name: 'Narasimha',   sub: 'The Pillar',        tag: 'Action Combat', story: 'Story4' },
   { n: 5,  emoji: '👣', name: 'Vamana',      sub: 'Three Steps',       tag: 'Puzzle + Strategy' },
   { n: 6,  emoji: '🪓', name: 'Parashurama', sub: 'The Warrior',       tag: 'Weapon Combat' },
   { n: 7,  emoji: '🏹', name: 'Rama',        sub: 'The Exile',         tag: 'Archery + Adventure' },

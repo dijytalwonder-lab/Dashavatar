@@ -1,0 +1,53 @@
+================================================================================
+ DASHAVATARA — WORLD 4: NARASIMHA (The Pillar)
+ ART ASSET PROMPTS  —  CHIBI CUTE STYLE (match Worlds 1-3)
+================================================================================
+
+World 4 runs on PROCEDURAL placeholder art (src/systems/NarasimhaTextures.js).
+Swap in real art: transparent PNGs in public/images/ under the SAME key, loaded
+in PreloadScene.js — the procedural version is then skipped.
+
+STYLE: chibi-cute, thick outlines, gold accents; a fierce twilight-palace mood
+(warm reds/golds). Narasimha is fearsome but adorable.
+
+[narasimha]  (~120x116, faces RIGHT)
+"Chibi cute man-lion, Vishnu's Narasimha avatar. Big golden lion head with a
+fluffy mane, fierce red eyes, tiny fangs, a muscular little humanoid torso, and
+sharp CLAWS on the forward hand. A small gold tilak. Ferocious but kawaii. Side
+view, thick outline, transparent bg."
+  (Optional later: a 2-3 frame CLAW-slash pose sheet and a red RAGE/Fury pose —
+   uniform cells, transparent.)
+
+[asuraGuard]  (~68x88, faces LEFT)
+"Chibi cute demon soldier: stocky purple asura with two small horns, a glowing
+yellow eye, holding a little spear. A baddie minion, adorable. Side view,
+transparent bg."
+
+[hiranyakashipu]  (~210x230)  — the tyrant king boss
+"Chibi cute-but-menacing demon king (Hiranyakashipu): big dark magenta-purple
+head/torso, tall ornate GOLD crown with a blue gem, glowing golden eyes, a
+curled black moustache, an angry brow. Regal and villainous but kawaii. Front
+view, transparent bg."  (When his boon shields him he is tinted gold in-game.)
+
+[pillar]  (~80x320)  — the famous palace pillar
+"Chibi cute ornate stone-and-gold palace pillar/column with gold capital and
+base and subtle flutes. Decorative. Transparent bg."
+
+--------------------------------------------------------------------------------
+BACKGROUND + WORLD CARD
+--------------------------------------------------------------------------------
+[worldNarasimha]  (landscape) — chapter-select card art
+"Chibi storybook scene: the man-lion Narasimha bursting from a cracking golden
+pillar at twilight in an ornate demon-king's palace, claws bared, the little
+devotee Prahlada watching in wonder. Epic and cute."
+
+[level background] — a warm twilight palace-hall interior (reuses World 1
+bg_far/mid/near tinted warm if not provided): gold pillars, red drapes, dusk
+light through arches.
+
+================================================================================
+KEYS USED BY THE CODE (World 4)
+================================================================================
+narasimha, asuraGuard, hiranyakashipu, pillar
+(+ optional: worldNarasimha card art, a level background)
+================================================================================
