@@ -30,21 +30,21 @@ export default class EndingScene extends Phaser.Scene {
     AudioManager.stopAmbient();
     AudioManager.lose();
     this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x2a0810, 0.4);
-    this.add.text(GAME_W / 2, 200, 'The Flood Prevailed', {
-      fontFamily: 'Georgia, serif', fontSize: '48px', color: '#ff8a8a', fontStyle: 'bold'
+    this.add.text(GAME_W / 2, 400, 'The Flood Prevailed', {
+      fontFamily: 'Georgia, serif', fontSize: '44px', color: '#ff8a8a', fontStyle: 'bold'
     }).setOrigin(0.5);
-    this.add.text(GAME_W / 2, 270, this.result.reason || 'Matsya could not save everyone in time.', {
+    this.add.text(GAME_W / 2, 480, this.result.reason || 'Matsya could not save everyone in time.', {
       fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#eaf6ff', align: 'center',
-      wordWrap: { width: GAME_W - 300 }
+      lineSpacing: 6, wordWrap: { width: GAME_W - 120 }
     }).setOrigin(0.5);
 
-    this._button(GAME_W / 2, 420, 'TRY AGAIN', () => {
+    this._button(GAME_W / 2, 680, 'TRY AGAIN', () => {
       AudioManager.click();
       this.scene.start('Level1');
     });
-    this._button(GAME_W / 2, 500, 'MAIN MENU', () => {
+    this._button(GAME_W / 2, 780, 'WORLDS', () => {
       AudioManager.click();
-      this.scene.start('MainMenu');
+      this.scene.start('ChapterSelect');
     }, 0x3a5a70);
   }
 
@@ -66,17 +66,17 @@ export default class EndingScene extends Phaser.Scene {
     AudioManager.win();
 
     // Cinematic line 1: the flood recedes
-    this.add.text(GAME_W / 2, 70, 'Chapter 1 Complete', {
-      fontFamily: 'Georgia, serif', fontSize: '44px', color: '#ffd257', fontStyle: 'bold'
+    this.add.text(GAME_W / 2, 170, 'Chapter 1 Complete', {
+      fontFamily: 'Georgia, serif', fontSize: '40px', color: '#ffd257', fontStyle: 'bold'
     }).setOrigin(0.5);
 
-    this.add.text(GAME_W / 2, 122, 'The flood recedes. Manu, the sages, the seeds and the creatures are safe.', {
+    this.add.text(GAME_W / 2, 226, 'The flood recedes. Manu, the sages, the seeds\nand the creatures are safe.', {
       fontFamily: 'system-ui, sans-serif', fontSize: '19px', color: '#eaf6ff', align: 'center',
-      wordWrap: { width: GAME_W - 260 }
+      lineSpacing: 6, wordWrap: { width: GAME_W - 80 }
     }).setOrigin(0.5);
 
     // Results card
-    const card = this.add.rectangle(GAME_W / 2, 300, 560, 230, 0x00121f, 0.7).setStrokeStyle(2, COLORS.air, 0.4);
+    const card = this.add.rectangle(GAME_W / 2, 480, GAME_W - 90, 280, 0x00121f, 0.7).setStrokeStyle(2, COLORS.air, 0.4);
     const rows = [
       ['🧙 Sages rescued', `${counts.sages}/${OBJECTIVES.sages}`],
       ['🌱 Seeds saved', `${counts.seeds}/${OBJECTIVES.seeds}`],
@@ -84,25 +84,27 @@ export default class EndingScene extends Phaser.Scene {
       ['📜 Vedas recovered', `${counts.scrolls}/${OBJECTIVES.scrolls}`],
       ['⭐ Score', `${score}`]
     ];
+    const cardLeft = GAME_W / 2 - (GAME_W - 90) / 2 + 34;
+    const cardRight = GAME_W / 2 + (GAME_W - 90) / 2 - 34;
     rows.forEach((r, i) => {
-      const y = 218 + i * 34;
-      this.add.text(GAME_W / 2 - 250, y, r[0], { fontFamily: 'system-ui', fontSize: '20px', color: '#eaf6ff' }).setOrigin(0, 0.5);
-      this.add.text(GAME_W / 2 + 250, y, r[1], { fontFamily: 'system-ui', fontSize: '20px', color: '#ffd257', fontStyle: 'bold' }).setOrigin(1, 0.5);
+      const y = 384 + i * 44;
+      this.add.text(cardLeft, y, r[0], { fontFamily: 'system-ui', fontSize: '21px', color: '#eaf6ff' }).setOrigin(0, 0.5);
+      this.add.text(cardRight, y, r[1], { fontFamily: 'system-ui', fontSize: '21px', color: '#ffd257', fontStyle: 'bold' }).setOrigin(1, 0.5);
     });
 
     // Ability unlocked banner
-    const ab = this.add.container(GAME_W / 2, 470).setAlpha(0);
-    const abBg = this.add.rectangle(0, 0, 460, 56, COLORS.gold, 0.16).setStrokeStyle(2, COLORS.gold, 0.7);
+    const ab = this.add.container(GAME_W / 2, 700).setAlpha(0);
+    const abBg = this.add.rectangle(0, 0, GAME_W - 110, 60, COLORS.gold, 0.16).setStrokeStyle(2, COLORS.gold, 0.7);
     const abTxt = this.add.text(0, 0, '🐟  ABILITY UNLOCKED:  SWIMMING', {
       fontFamily: 'system-ui, sans-serif', fontSize: '22px', color: '#ffe9b0', fontStyle: 'bold'
     }).setOrigin(0.5);
     ab.add([abBg, abTxt]);
-    this.tweens.add({ targets: ab, alpha: 1, y: 468, duration: 700, delay: 500, ease: 'Back.easeOut' });
+    this.tweens.add({ targets: ab, alpha: 1, y: 698, duration: 700, delay: 500, ease: 'Back.easeOut' });
 
     // The disturbing sequel hook (fades in after a beat)
-    const hook = this.add.text(GAME_W / 2, 545, '', {
-      fontFamily: 'Georgia, serif', fontSize: '20px', color: '#9bd7ef', fontStyle: 'italic', align: 'center',
-      wordWrap: { width: GAME_W - 300 }
+    const hook = this.add.text(GAME_W / 2, 830, '', {
+      fontFamily: 'Georgia, serif', fontSize: '21px', color: '#9bd7ef', fontStyle: 'italic', align: 'center',
+      lineSpacing: 6, wordWrap: { width: GAME_W - 100 }
     }).setOrigin(0.5);
     this.time.delayedCall(1400, () => {
       this._typewriter(hook, '“The flood was not the beginning. Something deeper still disturbs the balance of creation…”');
@@ -111,20 +113,20 @@ export default class EndingScene extends Phaser.Scene {
     // Buttons + Chapter 2 teaser
     this.time.delayedCall(2600, () => {
       this._teaser();
-      this._button(GAME_W / 2 - 150, GAME_H - 46, 'REPLAY', () => {
+      this._button(GAME_W / 2 - 145, 1160, 'REPLAY', () => {
         AudioManager.click();
         this.scene.start('Level1');
-      }, 0x3a5a70, 0.8);
-      this._button(GAME_W / 2 + 150, GAME_H - 46, 'MAIN MENU', () => {
+      }, 0x3a5a70, 0.9);
+      this._button(GAME_W / 2 + 145, 1160, 'WORLDS', () => {
         AudioManager.click();
-        this.scene.start('MainMenu');
-      }, 0x3a5a70, 0.8);
+        this.scene.start('ChapterSelect');
+      }, 0x3a5a70, 0.9);
     });
   }
 
   _teaser() {
-    const t = this.add.text(GAME_W / 2, 600, 'NEXT · Chapter 2 — 🐢 Kurma  (locked)', {
-      fontFamily: 'system-ui, sans-serif', fontSize: '20px', color: '#88a0b0'
+    const t = this.add.text(GAME_W / 2, 1000, 'Chapter 2 — 🐢 Kurma is now unlocked!', {
+      fontFamily: 'system-ui, sans-serif', fontSize: '21px', color: '#9be870', fontStyle: 'bold'
     }).setOrigin(0.5).setAlpha(0);
     this.tweens.add({ targets: t, alpha: 1, duration: 800 });
   }

@@ -1,8 +1,9 @@
 // Global game constants for Dashavatara Chapter 1: Matsya
 // Base resolution is landscape 1280x720, scaled with FIT to fill any device.
 
-export const GAME_W = 1280;
-export const GAME_H = 720;
+// Portrait (vertical) mobile resolution — 9:16.
+export const GAME_W = 720;
+export const GAME_H = 1280;
 
 // Colors (mythic underwater palette)
 export const COLORS = {

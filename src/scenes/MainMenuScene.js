@@ -12,22 +12,10 @@ export default class MainMenuScene extends Phaser.Scene {
   create() {
     makeWaterBackground(this);
 
-    // Big swimming Matsya on the menu
-    const fish = this.add.image(GAME_W / 2, 260, 'matsya').setScale(1.6);
-    this.tweens.add({
-      targets: fish,
-      y: '+=18',
-      duration: 2200,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
-    });
-    this.add.image(GAME_W / 2, 260, 'glow').setScale(2.2).setAlpha(0.5).setBlendMode(Phaser.BlendModes.ADD);
-
     this.add
-      .text(GAME_W / 2, 90, 'DASHAVATARA', {
+      .text(GAME_W / 2, 200, 'DASHAVATARA', {
         fontFamily: 'Georgia, serif',
-        fontSize: '62px',
+        fontSize: '54px',
         color: '#ffd257',
         fontStyle: 'bold'
       })
@@ -35,7 +23,7 @@ export default class MainMenuScene extends Phaser.Scene {
       .setShadow(0, 4, '#00131f', 8);
 
     this.add
-      .text(GAME_W / 2, 145, 'THE TEN AVATARS', {
+      .text(GAME_W / 2, 254, 'THE TEN AVATARS', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '22px',
         color: '#7fd7ff',
@@ -43,39 +31,36 @@ export default class MainMenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    // Big swimming Matsya on the menu
+    const fishY = 560;
+    this.add.image(GAME_W / 2, fishY, 'glow').setScale(2.8).setAlpha(0.5).setBlendMode(Phaser.BlendModes.ADD);
+    const fish = this.add.image(GAME_W / 2, fishY, 'matsya').setScale(2.0);
+    this.tweens.add({
+      targets: fish,
+      y: '+=20',
+      duration: 2200,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
     this.add
-      .text(GAME_W / 2, 400, 'Chapter 1 · Matsya', {
-        fontFamily: 'Georgia, serif',
-        fontSize: '34px',
-        color: '#eaf6ff'
-      })
-      .setOrigin(0.5);
-    this.add
-      .text(GAME_W / 2, 438, 'The Great Flood', {
+      .text(GAME_W / 2, 760, 'An epic journey through the ten\nincarnations of Vishnu.', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '20px',
         color: '#9bd7ef',
+        align: 'center',
+        lineSpacing: 6,
         fontStyle: 'italic'
       })
       .setOrigin(0.5);
 
-    // Play button
-    this._button(GAME_W / 2, 520, 'PLAY', () => {
+    // Play button -> chapter/world select
+    this._button(GAME_W / 2, 900, 'PLAY', () => {
       AudioManager.unlock();
       AudioManager.click();
-      this.scene.start('Story');
+      this.scene.start('ChapterSelect');
     });
-
-    // Continue hint if already completed
-    if (SaveManager.data.chapters[1] && SaveManager.data.chapters[1].completed) {
-      this.add
-        .text(GAME_W / 2, 585, `Best score: ${SaveManager.data.chapters[1].bestScore}`, {
-          fontFamily: 'system-ui, sans-serif',
-          fontSize: '18px',
-          color: '#ffd257'
-        })
-        .setOrigin(0.5);
-    }
 
     // Sound toggle
     this._soundBtn = this.add
@@ -90,7 +75,7 @@ export default class MainMenuScene extends Phaser.Scene {
       });
 
     this.add
-      .text(GAME_W / 2, GAME_H - 30, 'Swim with the joystick · SURGE to dash · TAIL WHIP to strike', {
+      .text(GAME_W / 2, GAME_H - 40, 'Swim · SURGE to dash · TAIL WHIP to strike', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '16px',
         color: '#6fb6d6'

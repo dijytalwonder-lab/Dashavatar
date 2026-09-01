@@ -1,0 +1,126 @@
+================================================================================
+ DASHAVATARA — CHAPTER 1: MATSYA
+ ART ASSET GENERATION PROMPTS
+================================================================================
+
+The game currently runs on PROCEDURAL placeholder art (drawn in code, no image
+files). To replace it with real art, generate the images below and drop them
+into:   public/images/<name>.png
+
+Then in src/scenes/PreloadScene.js, inside preload(), load each one under the
+SAME key the game already uses, e.g.:
+
+    this.load.image('matsya',   'images/matsya.png');
+    this.load.image('enemyFish','images/enemyFish.png');
+    ...
+
+...and delete the matching block in src/systems/Textures.js so the real image
+wins. Runtime keys must stay identical (listed in [brackets] below).
+
+GLOBAL STYLE
+- 2D mobile game, mythic Hindu art, painterly but clean, high contrast so
+  sprites pop against a deep-blue underwater background.
+- Consistent lighting from top. Soft rim light in cyan/gold.
+- Transparent background (PNG with alpha). No drop shadows baked in.
+- Palette: deep teal water (#041627 → #146c94), sacred gold (#ffd257),
+  Matsya teal (#3fc1c9), demon purple (#8a2be2).
+
+--------------------------------------------------------------------------------
+CHARACTERS
+--------------------------------------------------------------------------------
+
+[matsya]  (~96x60, faces RIGHT)
+A divine golden-teal fish, Vishnu's first avatar. Sleek body, elegant flowing
+fins, a subtle golden halo/aura, one large expressive eye, a small gold crown
+motif or tilak on the head. Heroic and graceful. Side view, swimming pose.
+
+[boss]  (~220x220)  — Hayagriva, the demon
+A menacing HORSE-HEADED demon rising from dark water. Elongated equine skull,
+glowing red eyes, a mane of purple spectral flame, dark muscular torso dissolving
+into shadow/water at the base. Holds a glowing bundle of sacred scrolls (the
+stolen Vedas). Terrifying but mythic, not gory. Front view.
+
+[sage]  (~64x64)
+An elderly rishi (sage) with white beard, saffron/ochre robe, calm face, hands
+in prayer, enclosed in a translucent rescue air-bubble. Gentle glow.
+
+--------------------------------------------------------------------------------
+ENEMIES
+--------------------------------------------------------------------------------
+
+[enemyFish]  (~72x48, faces LEFT)
+An aggressive predator fish, deep red, sharp teeth, angry yellow eye, spiky fins.
+Clearly a threat. Side view.
+
+[eel]  (~100x36, faces RIGHT)
+A long purple electric eel, sinuous S-curve body, glowing yellow eye, faint
+electric sparks along the spine. Side view.
+
+--------------------------------------------------------------------------------
+COLLECTIBLES / PICKUPS
+--------------------------------------------------------------------------------
+
+[seed]  (~32x40)
+A single glowing sacred seed/sprout, green, with a tiny leaf, soft golden glow —
+"the seed of every plant" Manu must save.
+
+[animal]  (~56x48, faces RIGHT)
+A small stranded land creature (a young deer or calf), warm orange-brown,
+frightened pose, side view — a creature being rescued from the flood.
+
+[scroll]  (~40x44)  — a Veda fragment (STAR collectible)
+An ancient rolled palm-leaf/parchment scroll bound with gold caps, faint Sanskrit
+glyphs, radiant golden aura. Feels holy and precious.
+
+[airPocket]  (~80x80)
+A shimmering cluster of breathable air bubbles trapped underwater, cyan-white,
+translucent, inviting.
+
+--------------------------------------------------------------------------------
+ENVIRONMENT / PROPS
+--------------------------------------------------------------------------------
+
+[boat]  (~160x90)  — Manu's boat
+A simple ancient wooden ark/boat with a single mast and a pale sail, viewed from
+the side, riding on the surface. Sturdy, weathered wood.
+
+[coral]  (~72x64)
+A cluster of sharp pink/magenta spike coral, hazardous, jagged tips. Bottom-
+anchored (also used flipped as ceiling spikes).
+
+[weakpoint]  (~48x48)
+A glowing targeting reticle — gold ring with crosshairs and a red core — shown on
+the boss when he is stunned. Clean UI/VFX style.
+
+[glow]  (~128x128)
+A soft radial glow sprite, white-hot center fading through gold to transparent.
+Used for auras, pickups, the sanctuary gate. Additive-blend friendly.
+
+[bubble]  (~16x16)
+A single small water bubble with a white highlight. Semi-transparent. Used for
+trails and particles (keep it tiny and simple).
+
+--------------------------------------------------------------------------------
+OPTIONAL BACKGROUND ART (parallax layers)
+--------------------------------------------------------------------------------
+- bg_far:   distant murky deep-sea gradient with faint light rays from above.
+- bg_mid:   silhouetted rocks / kelp / sunken ruins, blue-grey.
+- bg_near:  foreground seaweed / debris drifting, slightly blurred.
+Each 1280x720 (or wider, tileable horizontally), PNG.
+
+--------------------------------------------------------------------------------
+APP ICON & STORE ART (for the Android build)
+--------------------------------------------------------------------------------
+[app_icon]      1024x1024  — Matsya the golden fish on a deep-blue radial burst,
+                             centered, bold, readable at small sizes. No text.
+[splash]        2732x2732  — Matsya rising through the flood with the title
+                             "DASHAVATARA — Matsya" in gold serif, safe-area centered.
+[feature_graphic] 1024x500 — Matsya vs. the silhouette of Hayagriva across a
+                             stormy sea, cinematic, room for the title on the left.
+
+================================================================================
+NAMING CHECKLIST (all keys used by the code)
+================================================================================
+matsya, boss, sage, enemyFish, eel, seed, animal, scroll, airPocket, boat,
+coral, weakpoint, glow, bubble
+================================================================================

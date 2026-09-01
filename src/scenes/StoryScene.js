@@ -38,25 +38,27 @@ export default class StoryScene extends Phaser.Scene {
     this.index = 0;
 
     this.card = this.add
-      .rectangle(GAME_W / 2, GAME_H / 2 + 40, GAME_W - 200, 260, 0x00121f, 0.72)
+      .rectangle(GAME_W / 2, GAME_H / 2 + 40, GAME_W - 70, 340, 0x00121f, 0.72)
       .setStrokeStyle(2, COLORS.air, 0.4);
 
     this.titleTxt = this.add
-      .text(GAME_W / 2, GAME_H / 2 - 60, '', {
+      .text(GAME_W / 2, GAME_H / 2 - 90, '', {
         fontFamily: 'Georgia, serif',
-        fontSize: '36px',
+        fontSize: '34px',
         color: '#ffd257',
-        fontStyle: 'bold'
+        fontStyle: 'bold',
+        align: 'center',
+        wordWrap: { width: GAME_W - 120 }
       })
       .setOrigin(0.5);
 
     this.bodyTxt = this.add
-      .text(GAME_W / 2, GAME_H / 2 + 50, '', {
+      .text(GAME_W / 2, GAME_H / 2 + 40, '', {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '23px',
         color: '#eaf6ff',
         align: 'center',
-        wordWrap: { width: GAME_W - 280 },
+        wordWrap: { width: GAME_W - 130 },
         lineSpacing: 8
       })
       .setOrigin(0.5);

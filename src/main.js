@@ -4,6 +4,7 @@ import { GAME_W, GAME_H, COLORS } from './config.js';
 import BootScene from './scenes/BootScene.js';
 import PreloadScene from './scenes/PreloadScene.js';
 import MainMenuScene from './scenes/MainMenuScene.js';
+import ChapterSelectScene from './scenes/ChapterSelectScene.js';
 import StoryScene from './scenes/StoryScene.js';
 import Level1Scene from './scenes/Level1Scene.js';
 import BossScene from './scenes/BossScene.js';
@@ -38,6 +39,7 @@ const config = {
     BootScene,
     PreloadScene,
     MainMenuScene,
+    ChapterSelectScene,
     StoryScene,
     Level1Scene,
     BossScene,

@@ -47,8 +47,10 @@ export default class Level1Scene extends Phaser.Scene {
 
     // Player
     this.matsya = new Matsya(this, this.checkpointX, this.checkpointY);
-    this.cameras.main.startFollow(this.matsya, true, 0.1, 0.1);
-    this.cameras.main.setDeadzone(220, 160);
+    // Portrait viewport: bias the camera left so the player sees ahead (to the
+    // right) as they swim toward the sanctuary, and give vertical breathing room.
+    this.cameras.main.startFollow(this.matsya, true, 0.1, 0.1, -80, 0);
+    this.cameras.main.setDeadzone(90, 380);
 
     // Controls
     this.controls = new Controls(this);
@@ -79,80 +81,81 @@ export default class Level1Scene extends Phaser.Scene {
   // ---------------- Segment builders ----------------
 
   _label(x, title, subtitle) {
+    // Placed below the top HUD band so world-space labels never collide with it.
     this.add
-      .text(x, 70, title, {
+      .text(x, 210, title, {
         fontFamily: 'Georgia, serif',
         fontSize: '30px',
         color: '#ffd257',
         fontStyle: 'bold'
       })
       .setOrigin(0.5)
-      .setAlpha(0.5);
+      .setAlpha(0.45);
     this.add
-      .text(x, 104, subtitle, {
+      .text(x, 246, subtitle, {
         fontFamily: 'system-ui, sans-serif',
         fontSize: '16px',
         color: '#9bd7ef'
       })
       .setOrigin(0.5)
-      .setAlpha(0.5);
+      .setAlpha(0.45);
   }
 
   _buildSegment1() {
     this._label(700, 'Rising Waters', 'Segment 1 · learn to swim');
-    // gentle: 2 sages, 2 seeds, an air pocket
-    this._addPickup('sage', 520, 300);
-    this._addPickup('sage', 1150, 460);
-    this._addPickup('seed', 780, 520);
-    this._addPickup('seed', 1350, 220);
-    this._addAirPocket(980, 140);
-    // a couple of decorative coral (non-lethal here spaced low)
+    // gentle: 2 sages, 2 seeds, an air pocket — spread across the tall view
+    this._addPickup('sage', 480, 360);
+    this._addPickup('sage', 1150, 820);
+    this._addPickup('seed', 780, 620);
+    this._addPickup('seed', 1350, 300);
+    this._addAirPocket(980, 220);
+    // decorative coral on the sea floor
     this.hazards.create(600, GAME_H - 30, 'coral').refreshBody();
   }
 
   _buildSegment2() {
     this._label(SEG.two + 700, 'The Deep Flood', 'Segment 2 · currents & creatures');
-    // currents (push zones)
-    this._addCurrent(SEG.two + 200, 200, 360, 320, 120, 0);
-    this._addCurrent(SEG.two + 900, 260, 300, 300, -90, -30);
+    // currents (push zones) — tall vertical bands in portrait
+    this._addCurrent(SEG.two + 200, 300, 340, 620, 120, 0);
+    this._addCurrent(SEG.two + 900, 400, 300, 560, -90, -40);
     // whirlpools
-    this._addWhirlpool(SEG.two + 620, 430, 120);
-    this._addWhirlpool(SEG.two + 1300, 250, 110);
-    // coral hazards
+    this._addWhirlpool(SEG.two + 620, 760, 130);
+    this._addWhirlpool(SEG.two + 1300, 420, 120);
+    // coral hazards (floor + ceiling)
     this.hazards.create(SEG.two + 480, GAME_H - 30, 'coral').refreshBody();
     this.hazards.create(SEG.two + 1050, 40, 'coral').setFlipY(true).refreshBody();
     this.hazards.create(SEG.two + 1500, GAME_H - 30, 'coral').refreshBody();
     // pickups: 2 sages, 2 seeds, 2 animals, 3 scrolls
-    this._addPickup('sage', SEG.two + 350, 470);
-    this._addPickup('sage', SEG.two + 1450, 500);
-    this._addPickup('seed', SEG.two + 700, 160);
-    this._addPickup('seed', SEG.two + 1150, 560);
-    this._addPickup('animal', SEG.two + 520, 300);
-    this._addPickup('animal', SEG.two + 1250, 380);
-    this._addPickup('scroll', SEG.two + 260, 220);
-    this._addPickup('scroll', SEG.two + 820, 520);
-    this._addPickup('scroll', SEG.two + 1550, 220);
+    this._addPickup('sage', SEG.two + 350, 820);
+    this._addPickup('sage', SEG.two + 1450, 880);
+    this._addPickup('seed', SEG.two + 700, 240);
+    this._addPickup('seed', SEG.two + 1150, 980);
+    this._addPickup('animal', SEG.two + 520, 500);
+    this._addPickup('animal', SEG.two + 1250, 640);
+    this._addPickup('scroll', SEG.two + 260, 340);
+    this._addPickup('scroll', SEG.two + 820, 920);
+    this._addPickup('scroll', SEG.two + 1550, 360);
     // enemies
-    this._addEnemyFish(SEG.two + 450, 250);
-    this._addEnemyFish(SEG.two + 950, 450);
-    this._addEnemyFish(SEG.two + 1350, 200);
-    this._addEel(SEG.two + 700, 380);
-    this._addEel(SEG.two + 1200, 480);
+    this._addEnemyFish(SEG.two + 450, 420);
+    this._addEnemyFish(SEG.two + 950, 780);
+    this._addEnemyFish(SEG.two + 1350, 320);
+    this._addEel(SEG.two + 700, 640);
+    this._addEel(SEG.two + 1200, 860);
   }
 
   _buildSegment3() {
     this._label(SEG.three + 700, "Guarding Manu's Boat", 'Segment 3 · protect the boat');
     // pickups: 1 sage, 2 seeds, 2 animals, 2 scrolls
-    this._addPickup('sage', SEG.three + 300, 300);
-    this._addPickup('seed', SEG.three + 600, 500);
-    this._addPickup('seed', SEG.three + 1200, 220);
-    this._addPickup('animal', SEG.three + 450, 180);
-    this._addPickup('animal', SEG.three + 1000, 520);
-    this._addPickup('scroll', SEG.three + 800, 320);
-    this._addPickup('scroll', SEG.three + 1400, 420);
+    this._addPickup('sage', SEG.three + 300, 520);
+    this._addPickup('seed', SEG.three + 600, 860);
+    this._addPickup('seed', SEG.three + 1200, 380);
+    this._addPickup('animal', SEG.three + 450, 300);
+    this._addPickup('animal', SEG.three + 1000, 900);
+    this._addPickup('scroll', SEG.three + 800, 560);
+    this._addPickup('scroll', SEG.three + 1400, 700);
 
     // Manu's boat — drifts slowly to the right along the surface
-    this.boat = this.physics.add.image(SEG.three + 200, 120, 'boat').setDepth(40);
+    this.boat = this.physics.add.image(SEG.three + 200, 150, 'boat').setDepth(40);
     this.boat.body.setAllowGravity(false);
     this.boat.setImmovable(true);
     this.boat.setData('maxHealth', TUNING.boatMaxHealth);
@@ -162,16 +165,16 @@ export default class Level1Scene extends Phaser.Scene {
 
   _buildEndGate() {
     this.gate = this.add.container(SEG.end - 160, GAME_H / 2);
-    const pillar1 = this.add.rectangle(-60, 0, 24, 360, COLORS.gold, 0.5);
-    const pillar2 = this.add.rectangle(60, 0, 24, 360, COLORS.gold, 0.5);
-    const arch = this.add.image(0, 0, 'glow').setScale(3).setAlpha(0.6).setBlendMode(Phaser.BlendModes.ADD);
+    const pillar1 = this.add.rectangle(-70, 0, 28, 900, COLORS.gold, 0.5);
+    const pillar2 = this.add.rectangle(70, 0, 28, 900, COLORS.gold, 0.5);
+    const arch = this.add.image(0, 0, 'glow').setScale(4).setAlpha(0.6).setBlendMode(Phaser.BlendModes.ADD);
     this.gateText = this.add
-      .text(0, -210, 'SANCTUARY', { fontFamily: 'Georgia, serif', fontSize: '26px', color: '#ffd257', fontStyle: 'bold' })
+      .text(0, -470, 'SANCTUARY', { fontFamily: 'Georgia, serif', fontSize: '30px', color: '#ffd257', fontStyle: 'bold' })
       .setOrigin(0.5);
     this.gate.add([arch, pillar1, pillar2, this.gateText]);
-    this.tweens.add({ targets: arch, scale: { from: 2.6, to: 3.2 }, alpha: { from: 0.4, to: 0.7 }, duration: 1400, yoyo: true, repeat: -1 });
+    this.tweens.add({ targets: arch, scale: { from: 3.6, to: 4.4 }, alpha: { from: 0.4, to: 0.7 }, duration: 1400, yoyo: true, repeat: -1 });
 
-    this.gateZone = this.add.zone(SEG.end - 160, GAME_H / 2, 160, 400);
+    this.gateZone = this.add.zone(SEG.end - 160, GAME_H / 2, 180, GAME_H);
     this.physics.add.existing(this.gateZone, true);
   }
 

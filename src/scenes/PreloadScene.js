@@ -45,13 +45,14 @@ export default class PreloadScene extends Phaser.Scene {
 
   create() {
     generateAllTextures(this);
-    // brief bar fill for a polished boot, then into the menu
+    // brief bar fill for a polished boot (cosmetic)…
     this.tweens.add({
       targets: this._bar,
       width: this._barW,
       duration: 500,
-      ease: 'Sine.easeInOut',
-      onComplete: () => this.scene.start('MainMenu')
+      ease: 'Sine.easeInOut'
     });
+    // …and a reliable timer drives the transition into the menu.
+    this.time.delayedCall(600, () => this.scene.start('MainMenu'));
   }
 }
