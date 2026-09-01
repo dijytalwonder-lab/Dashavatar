@@ -45,6 +45,8 @@ export default class PreloadScene extends Phaser.Scene {
     // Hero + gameplay sprites
     this.load.image('matsya', 'images/matsya.png');
     this.load.spritesheet('matsyaSwim', 'images/matsya_swim.png', { frameWidth: 250, frameHeight: 186 });
+    this.load.spritesheet('matsyaDash', 'images/matsya_dash.png', { frameWidth: 250, frameHeight: 200 });
+    this.load.spritesheet('matsyaAttack', 'images/matsya_attack.png', { frameWidth: 250, frameHeight: 190 });
     this.load.image('enemyFish', 'images/enemyFish.png');
     this.load.image('eel', 'images/eel.png');
     this.load.image('sage', 'images/sage.png');
@@ -71,13 +73,22 @@ export default class PreloadScene extends Phaser.Scene {
   create() {
     generateAllTextures(this);
 
-    // Matsya swim-cycle animation (global — usable from any scene).
+    // Matsya animations (global — usable from any scene).
     if (!this.anims.exists('matsya-swim')) {
       this.anims.create({
         key: 'matsya-swim',
         frames: this.anims.generateFrameNumbers('matsyaSwim', { start: 0, end: 5 }),
-        frameRate: 9,
-        repeat: -1
+        frameRate: 9, repeat: -1
+      });
+      this.anims.create({
+        key: 'matsya-dash',
+        frames: this.anims.generateFrameNumbers('matsyaDash', { start: 0, end: 1 }),
+        frameRate: 14, repeat: -1
+      });
+      this.anims.create({
+        key: 'matsya-attack',
+        frames: this.anims.generateFrameNumbers('matsyaAttack', { start: 0, end: 1 }),
+        frameRate: 16, repeat: 0
       });
     }
 

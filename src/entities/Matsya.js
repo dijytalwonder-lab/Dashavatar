@@ -12,7 +12,8 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, animated ? 'matsyaSwim' : 'matsya');
     scene.add.existing(this);
     scene.physics.add.existing(this);
-    if (animated && scene.anims.exists('matsya-swim')) this.play('matsya-swim');
+    this.hasAnims = animated && scene.anims.exists('matsya-swim');
+    if (this.hasAnims) this.play('matsya-swim');
 
     this.setCollideWorldBounds(true);
     // Scale to a good gameplay size (~130px wide) and fit a circular hitbox over
@@ -63,6 +64,12 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
       this._dash(v);
     }
 
+    // Revert to the swim cycle once the dash whirlpool ends.
+    if (this.hasAnims && !this.isDashing) {
+      const cur = this.anims.currentAnim && this.anims.currentAnim.key;
+      if (cur === 'matsya-dash') this.play('matsya-swim');
+    }
+
     if (!this.isDashing) {
       const ax = v.x * TUNING.matsyaAccel;
       const ay = v.y * TUNING.matsyaAccel;
@@ -109,6 +116,8 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
     this.dashReadyAt = this.scene.time.now + TUNING.dashCooldown;
     this.invincibleUntil = Math.max(this.invincibleUntil, this.scene.time.now + TUNING.dashDuration);
     AudioManager.dash();
+    // Become a spinning water whirlpool for the dash.
+    if (this.hasAnims) this.play('matsya-dash');
     // dash streak (squash relative to the sprite's base scale)
     this.scene.tweens.add({
       targets: this,
@@ -136,6 +145,13 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
       duration: 220,
       onComplete: () => ring.destroy()
     });
+    // Golden power-strike pose, then back to swimming (unless mid-dash).
+    if (this.hasAnims && !this.isDashing) {
+      this.play('matsya-attack');
+      this.once('animationcomplete-matsya-attack', () => {
+        if (!this.isDashing) this.play('matsya-swim');
+      });
+    }
     AudioManager.swim();
     return { x: hx, y: hy, r: range };
   }
