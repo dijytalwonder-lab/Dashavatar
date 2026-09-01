@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import { GAME_W, GAME_H, COLORS, TUNING } from '../config.js';
-import { makeWaterBackground } from '../systems/Background.js';
 import AudioManager from '../systems/AudioManager.js';
 import Controls from '../systems/Controls.js';
 import Matsya from '../entities/Matsya.js';
@@ -21,9 +20,11 @@ export default class BossScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, GAME_W, GAME_H);
     this.cameras.main.setBounds(0, 0, GAME_W, GAME_H);
 
-    // Darker, ominous water
-    makeWaterBackground(this, GAME_W);
-    this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x1a0820, 0.35).setDepth(-50);
+    // Vast deep-sea backdrop, darkened to an ominous purple for the boss fight.
+    const bg = this.add.image(GAME_W / 2, GAME_H / 2, 'bgFar').setDepth(-120);
+    bg.setScale(Math.max(GAME_W / bg.width, GAME_H / bg.height));
+    bg.setTint(0x5a4a7a);
+    this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x1a0820, 0.5).setDepth(-50);
     AudioManager.startAmbient();
 
     // State
@@ -37,15 +38,17 @@ export default class BossScene extends Phaser.Scene {
     this.matsya = new Matsya(this, 180, GAME_H / 2);
 
     // Boss
-    this.boss = this.physics.add.image(GAME_W - 260, GAME_H / 2, 'boss').setDepth(40);
+    this.boss = this.physics.add.image(GAME_W - 220, GAME_H / 2, 'boss').setDepth(40);
+    this.boss.setScale(190 / this.boss.height);
     this.boss.body.setAllowGravity(false);
-    this.boss.body.setCircle(78, 32, 42);
+    const br = this.boss.height * 0.36;
+    this.boss.body.setCircle(br, this.boss.width / 2 - br, this.boss.height / 2 - br);
     this.boss.setCollideWorldBounds(true);
     this.boss.body.setBounce(1, 1);
 
-    // The stolen Vedas glowing on the boss
-    this.vedas = this.add.image(this.boss.x, this.boss.y + 10, 'scroll').setScale(1.4).setDepth(41);
-    this.vedasGlow = this.add.image(this.boss.x, this.boss.y + 10, 'glow').setScale(1.6).setAlpha(0.5).setBlendMode(Phaser.BlendModes.ADD).setDepth(41);
+    // The stolen Vedas glowing on the boss (small until freed on defeat)
+    this.vedas = this.add.image(this.boss.x, this.boss.y + 30, 'scroll').setScale(0.5).setDepth(41);
+    this.vedasGlow = this.add.image(this.boss.x, this.boss.y + 30, 'glow').setScale(1.2).setAlpha(0.4).setBlendMode(Phaser.BlendModes.ADD).setDepth(41);
 
     // Weak point marker (hidden until stunned)
     this.weak = this.add.image(this.boss.x, this.boss.y, 'weakpoint').setDepth(42).setVisible(false);
@@ -107,7 +110,9 @@ export default class BossScene extends Phaser.Scene {
     if (this.over || this._isStunned()) return;
     const m = this.minions.create(this.boss.x, this.boss.y, 'enemyFish');
     m.body.setAllowGravity(false);
-    m.body.setCircle(20, 16, 4);
+    m.setScale(60 / m.height).setDepth(30);
+    const mr = m.height * 0.4;
+    m.body.setCircle(mr, m.width / 2 - mr, m.height / 2 - mr);
     m.setData('hp', 1);
     AudioManager.enemyDie();
   }
@@ -249,7 +254,7 @@ export default class BossScene extends Phaser.Scene {
     this.minions.getChildren().forEach((m) => {
       const ang = Math.atan2(this.matsya.y - m.y, this.matsya.x - m.x);
       m.setVelocity(Math.cos(ang) * 130, Math.sin(ang) * 130);
-      m.setFlipX(this.matsya.x < m.x);
+      m.setFlipX(m.body.velocity.x > 0); // faces left by default
     });
 
     // idle boss drift when not charging/stunned

@@ -68,6 +68,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Sage inside a rescue bubble ---
+  if (!scene.textures.exists('sage'))
   makeCanvasTexture(scene, 'sage', 64, 64, (ctx, w, h) => {
     ctx.fillStyle = css(0x9be3ff, 0.18);
     ctx.beginPath();
@@ -101,6 +102,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Seed (sacred plant seed) ---
+  if (!scene.textures.exists('seed'))
   makeCanvasTexture(scene, 'seed', 32, 40, (ctx) => {
     ctx.fillStyle = css(COLORS.seed);
     ctx.beginPath();
@@ -120,6 +122,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Animal (stranded creature — a small deer-ish silhouette) ---
+  if (!scene.textures.exists('animal'))
   makeCanvasTexture(scene, 'animal', 56, 48, (ctx) => {
     ctx.fillStyle = css(COLORS.animal);
     ctx.beginPath();
@@ -148,6 +151,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Veda scroll (star collectible) ---
+  if (!scene.textures.exists('scroll'))
   makeCanvasTexture(scene, 'scroll', 40, 44, (ctx) => {
     ctx.fillStyle = css(COLORS.scroll);
     ctx.fillRect(8, 6, 24, 32);
@@ -170,6 +174,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Enemy fish (aggressive) ---
+  if (!scene.textures.exists('enemyFish'))
   makeCanvasTexture(scene, 'enemyFish', 72, 48, (ctx, w, h) => {
     ctx.fillStyle = css(COLORS.enemy);
     ctx.beginPath();
@@ -203,6 +208,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Eel (patrols / lunges) ---
+  if (!scene.textures.exists('eel'))
   makeCanvasTexture(scene, 'eel', 100, 36, (ctx, w, h) => {
     const grad = ctx.createLinearGradient(0, 0, w, 0);
     grad.addColorStop(0, css(COLORS.eel));
@@ -273,6 +279,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Manu's boat ---
+  if (!scene.textures.exists('boat'))
   makeCanvasTexture(scene, 'boat', 160, 90, (ctx, w, h) => {
     // hull
     ctx.fillStyle = css(COLORS.boat);
@@ -302,6 +309,7 @@ export function generateAllTextures(scene) {
   });
 
   // --- Hayagriva boss: horse-headed demon torso ---
+  if (!scene.textures.exists('boss'))
   makeCanvasTexture(scene, 'boss', 220, 220, (ctx, w, h) => {
     // dark aura body
     const grad = ctx.createRadialGradient(110, 120, 20, 110, 120, 100);

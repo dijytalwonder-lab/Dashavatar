@@ -116,3 +116,42 @@ export function makeWorldBackground(scene, bgKey) {
 
   return tile;
 }
+
+// Three painted underwater scenes, one per level segment, cross-fading as the
+// camera crosses the segment boundaries (s2, s3 in world-x). Returns an object
+// with update(cameraX). A subtle depth overlay + live bubbles sit on top.
+export function makeSegmentedBackground(scene, s2, s3) {
+  const cover = (key, depth) => {
+    const img = scene.add.image(GAME_W / 2, GAME_H / 2, key).setScrollFactor(0).setDepth(depth);
+    const s = Math.max(GAME_W / img.width, GAME_H / img.height);
+    img.setScale(s);
+    return img;
+  };
+  // Ordered back-to-front; later segments drawn on top and revealed by alpha.
+  const near = cover('bgNear', -122); // segment 1
+  const mid = cover('bgMid', -121);   // segment 2
+  const far = cover('bgFar', -120);   // segment 3
+
+  // Gentle depth overlay so HUD + sprites stay legible over busy art.
+  const overlay = scene.add.graphics().setScrollFactor(0).setDepth(-115);
+  overlay.fillGradientStyle(0x000000, 0x000000, COLORS.deepWater, COLORS.deepWater, 0.0, 0.0, 0.35, 0.35);
+  overlay.fillRect(0, 0, GAME_W, GAME_H);
+
+  // A few live rising bubbles for motion.
+  scene.add.particles(0, 0, 'bubble', {
+    x: { min: 0, max: GAME_W }, y: GAME_H + 10, lifespan: 6000,
+    speedY: { min: -50, max: -26 }, speedX: { min: -8, max: 8 },
+    scale: { min: 0.2, max: 0.8 }, alpha: { start: 0.4, end: 0 }, frequency: 380, quantity: 1
+  }).setScrollFactor(0).setDepth(-108);
+
+  const FADE = 500; // px of cross-fade around each boundary
+  const ramp = (x, edge) => Phaser.Math.Clamp((x - (edge - FADE)) / FADE, 0, 1);
+
+  return {
+    update(camX) {
+      const cx = camX + GAME_W / 2;
+      mid.setAlpha(ramp(cx, s2));            // near -> mid across s2
+      far.setAlpha(ramp(cx, s3));            // (mid) -> far across s3
+    }
+  };
+}

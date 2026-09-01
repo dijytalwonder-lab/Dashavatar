@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GAME_W, GAME_H, COLORS, TUNING, OBJECTIVES } from '../config.js';
-import { makeWorldBackground } from '../systems/Background.js';
+import { makeSegmentedBackground } from '../systems/Background.js';
 import AudioManager from '../systems/AudioManager.js';
 import Controls from '../systems/Controls.js';
 import Matsya from '../entities/Matsya.js';
@@ -20,7 +20,7 @@ export default class Level1Scene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, WORLD_W, GAME_H);
     this.cameras.main.setBounds(0, 0, WORLD_W, GAME_H);
 
-    this.worldBg = makeWorldBackground(this, 'matsyaWorldBg');
+    this.bgLayers = makeSegmentedBackground(this, SEG.two, SEG.three);
     AudioManager.startAmbient();
 
     // Run state (persists across checkpoint respawns within this attempt)
@@ -155,7 +155,8 @@ export default class Level1Scene extends Phaser.Scene {
     this._addPickup('scroll', SEG.three + 1400, 700);
 
     // Manu's boat — drifts slowly to the right along the surface
-    this.boat = this.physics.add.image(SEG.three + 200, 150, 'boat').setDepth(40);
+    this.boat = this.physics.add.image(SEG.three + 200, 170, 'boat').setDepth(40);
+    this.boat.setScale(180 / this.boat.width);
     this.boat.body.setAllowGravity(false);
     this.boat.setImmovable(true);
     this.boat.setData('maxHealth', TUNING.boatMaxHealth);
@@ -184,7 +185,13 @@ export default class Level1Scene extends Phaser.Scene {
     const p = this.pickups.create(x, y, kind);
     p.setData('kind', kind);
     p.body.setAllowGravity(false);
-    p.body.setCircle(18, p.width / 2 - 18, p.height / 2 - 18);
+    // Scale the real sprite to a consistent gameplay size and fit a round hitbox
+    // (the Arcade body scales with the sprite in Phaser 3.60+).
+    const targetH = { sage: 82, seed: 62, animal: 72, scroll: 70 }[kind] || 64;
+    p.setScale(targetH / p.height);
+    p.setDepth(20);
+    const r = Math.min(p.width, p.height) * 0.44;
+    p.body.setCircle(r, p.width / 2 - r, p.height / 2 - r);
     // gentle float
     this.tweens.add({ targets: p, y: y - 12, duration: 1600 + Math.random() * 800, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     const glow = this.add.image(x, y, 'glow').setScale(kind === 'scroll' ? 1.1 : 0.8).setAlpha(0.35).setBlendMode(Phaser.BlendModes.ADD).setDepth(5);
@@ -230,7 +237,9 @@ export default class Level1Scene extends Phaser.Scene {
     e.setData('hp', 2);
     e.setData('homeY', y);
     e.body.setAllowGravity(false);
-    e.body.setCircle(22, 14, 2);
+    e.setScale(74 / e.height).setDepth(30);
+    const r = e.height * 0.4;
+    e.body.setCircle(r, e.width / 2 - r, e.height / 2 - r);
     e.setData('baseX', x);
     return e;
   }
@@ -242,7 +251,8 @@ export default class Level1Scene extends Phaser.Scene {
     e.setData('homeY', y);
     e.setData('phase', Math.random() * Math.PI * 2);
     e.body.setAllowGravity(false);
-    e.body.setSize(60, 20);
+    e.setScale(140 / e.width).setDepth(30);
+    e.body.setSize(e.width * 0.72, e.height * 0.6, true);
     e.setData('lungeUntil', 0);
     return e;
   }
@@ -313,8 +323,8 @@ export default class Level1Scene extends Phaser.Scene {
   update(time, delta) {
     if (this.gameOver) return;
     const dt = delta / 1000;
-    // Parallax the painted world backdrop against the camera.
-    if (this.worldBg) this.worldBg.tilePositionX = this.cameras.main.scrollX * 0.4;
+    // Cross-fade the segment backdrops as the camera advances.
+    if (this.bgLayers) this.bgLayers.update(this.cameras.main.scrollX);
     this.controls.update();
     this.matsya.handleInput(this.controls);
 
@@ -398,12 +408,13 @@ export default class Level1Scene extends Phaser.Scene {
           // chase
           const ang = Math.atan2(py - e.y, px - e.x);
           e.setVelocity(Math.cos(ang) * 140, Math.sin(ang) * 140);
-          e.setFlipX(px < e.x);
         } else {
           // patrol around baseX
           const base = e.getData('baseX');
           e.setVelocity(Math.sin(time / 700 + base) * 60, Math.cos(time / 900 + base) * 30);
         }
+        // sprite faces LEFT by default -> flip to face right when moving right
+        if (Math.abs(e.body.velocity.x) > 8) e.setFlipX(e.body.velocity.x > 0);
       } else if (type === 'eel') {
         const home = e.getData('homeY');
         const phase = e.getData('phase');

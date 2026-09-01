@@ -41,14 +41,27 @@ export default class PreloadScene extends Phaser.Scene {
     this._bar = bar;
     this._barW = barW;
 
-    // Real UI + world art (procedural sprites are still generated in create()).
-    this.load.image('matsya', 'images/matsya.png'); // real hero sprite
+    // Real UI + world art (remaining sprites are generated procedurally in create()).
+    // Hero + gameplay sprites
+    this.load.image('matsya', 'images/matsya.png');
+    this.load.image('enemyFish', 'images/enemyFish.png');
+    this.load.image('eel', 'images/eel.png');
+    this.load.image('sage', 'images/sage.png');
+    this.load.image('seed', 'images/seed.png');
+    this.load.image('animal', 'images/animal.png');
+    this.load.image('scroll', 'images/scroll.png');
+    this.load.image('boss', 'images/boss.png');
+    this.load.image('boat', 'images/boat.png');
+    // Level backdrops (opaque -> JPG)
+    this.load.image('bgFar', 'images/bgFar.jpg');
+    this.load.image('bgMid', 'images/bgMid.jpg');
+    this.load.image('bgNear', 'images/bgNear.jpg');
+    // UI
     this.load.image('menuBg', 'images/menuBg.png');
     this.load.image('logo', 'images/logo.png');
     this.load.image('btnPlay', 'images/btnPlay.png');
     this.load.image('btnChapters', 'images/btnChapters.png');
     this.load.image('btnSettings', 'images/btnSettings.png');
-    this.load.image('matsyaWorldBg', 'images/matsyaWorldBg.png');
   }
 
   create() {
