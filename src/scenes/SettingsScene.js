@@ -15,6 +15,7 @@ export default class SettingsScene extends Phaser.Scene {
   }
 
   create() {
+    this.scene.bringToTop(); // render above whatever launched it
     // Dim backdrop (also eats clicks so the scene beneath doesn't get them)
     this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x000814, 0.72)
       .setInteractive();

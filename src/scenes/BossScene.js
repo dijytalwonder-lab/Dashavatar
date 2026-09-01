@@ -324,9 +324,18 @@ export default class BossScene extends Phaser.Scene {
   // ---------------- HUD ----------------
 
   _buildHud() {
+    // Pause button (top-left)
+    const pb = this.add.container(34, 36).setScrollFactor(0).setDepth(500);
+    const pbBg = this.add.circle(0, 0, 24, 0x00121f, 0.55).setStrokeStyle(2, 0xc98aff, 0.6);
+    pb.add([pbBg, this.add.text(0, -1, '❚❚', { fontFamily: 'system-ui', fontSize: '18px', color: '#e0c8ff', fontStyle: 'bold' }).setOrigin(0.5)]);
+    pbBg.setInteractive(new Phaser.Geom.Circle(0, 0, 26), Phaser.Geom.Circle.Contains)
+      .on('pointerdown', () => pb.setScale(0.9))
+      .on('pointerup', () => { pb.setScale(1); this._openPause(); })
+      .on('pointerout', () => pb.setScale(1));
+
     this.hearts = [];
     for (let i = 0; i < TUNING.maxHealth; i++) {
-      this.hearts.push(this.add.text(20 + i * 34, 16, '❤', { fontSize: '30px', color: '#ff5a6a' }).setScrollFactor(0).setDepth(500));
+      this.hearts.push(this.add.text(70 + i * 32, 18, '❤', { fontSize: '28px', color: '#ff5a6a' }).setScrollFactor(0).setDepth(500));
     }
     // Boss HP bar
     this.add.text(GAME_W / 2, 20, 'HAYAGRIVA', { fontFamily: 'Georgia, serif', fontSize: '20px', color: '#c98aff', fontStyle: 'bold' }).setOrigin(0.5, 0).setScrollFactor(0).setDepth(500);
@@ -334,6 +343,13 @@ export default class BossScene extends Phaser.Scene {
     this.bossBar = this.add.rectangle(GAME_W / 2 - 228, 54, 456, 12, 0xc94bd4).setOrigin(0, 0.5).setScrollFactor(0).setDepth(500);
 
     this.dashPip = this.add.text(GAME_W - 220, GAME_H - 176, 'SURGE READY', { fontFamily: 'system-ui', fontSize: '13px', color: '#ffe9b0' }).setOrigin(0.5).setScrollFactor(0).setDepth(500);
+  }
+
+  _openPause() {
+    if (this.over || this.scene.isActive('Pause')) return;
+    AudioManager.click();
+    this.scene.pause();
+    this.scene.launch('Pause', { from: 'Boss' });
   }
 
   _updateHud() {
