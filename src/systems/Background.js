@@ -1,0 +1,65 @@
+import Phaser from 'phaser';
+import { GAME_W, GAME_H, COLORS } from '../config.js';
+
+// Shared animated underwater backdrop: vertical depth gradient, drifting light
+// rays, rising bubbles and a soft caustic shimmer. Used by menu + gameplay so
+// every scene feels like the same ocean. `worldWidth` lets it tile across a
+// scrolling level; pass GAME_W for static scenes.
+export function makeWaterBackground(scene, worldWidth = GAME_W) {
+  const layer = scene.add.container(0, 0).setDepth(-100);
+
+  // Depth gradient (surface bright -> deep dark), drawn once to a texture-sized rect stack.
+  const bands = 24;
+  for (let i = 0; i < bands; i++) {
+    const t = i / (bands - 1);
+    const c = Phaser.Display.Color.Interpolate.ColorWithColor(
+      Phaser.Display.Color.ValueToColor(COLORS.shallowWater),
+      Phaser.Display.Color.ValueToColor(COLORS.deepWater),
+      bands - 1,
+      i
+    );
+    const hex = Phaser.Display.Color.GetColor(c.r, c.g, c.b);
+    const r = scene.add
+      .rectangle(0, (GAME_H / bands) * i, worldWidth, GAME_H / bands + 1, hex)
+      .setOrigin(0, 0)
+      .setScrollFactor(0.0, 1);
+    layer.add(r);
+  }
+
+  // Light rays from the surface (angled translucent beams)
+  const rays = [];
+  for (let i = 0; i < 6; i++) {
+    const rx = (worldWidth / 6) * i + 60;
+    const ray = scene.add
+      .rectangle(rx, 0, 60, GAME_H * 1.2, 0xbdf0ff, 0.06)
+      .setOrigin(0.5, 0)
+      .setAngle(12)
+      .setScrollFactor(0.3, 0);
+    rays.push(ray);
+    layer.add(ray);
+    scene.tweens.add({
+      targets: ray,
+      alpha: { from: 0.03, to: 0.1 },
+      duration: 3000 + i * 400,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+  }
+
+  // Rising bubbles (emitter) — parallax slow layer
+  const bubbles = scene.add.particles(0, 0, 'bubble', {
+    x: { min: 0, max: Math.min(worldWidth, GAME_W) },
+    y: GAME_H + 10,
+    lifespan: 6000,
+    speedY: { min: -60, max: -30 },
+    speedX: { min: -10, max: 10 },
+    scale: { min: 0.2, max: 0.9 },
+    alpha: { start: 0.5, end: 0 },
+    frequency: 400,
+    quantity: 1
+  });
+  bubbles.setScrollFactor(0.4, 1).setDepth(-90);
+
+  return { layer, bubbles, rays };
+}

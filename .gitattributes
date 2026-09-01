@@ -1,0 +1,7 @@
+# Normalize line endings — keep the repo LF, let Git handle checkout.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.apk binary
+*.aab binary
+*.keystore binary
