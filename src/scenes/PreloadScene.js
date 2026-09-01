@@ -36,11 +36,18 @@ export default class PreloadScene extends Phaser.Scene {
     border.setStrokeStyle(2, COLORS.air, 0.6);
     const bar = this.add.rectangle(x, y + 30, 1, 16, COLORS.air).setOrigin(0, 0.5);
 
-    // No external files to load (all art is procedural), so animate the bar to
-    // full, then continue. This is also where real art would be loaded, e.g.
-    //   this.load.image('matsya', 'images/matsya.png');
+    // Track real load progress (images below are a few MB total).
+    this.load.on('progress', (p) => { bar.width = Math.max(1, barW * p); });
     this._bar = bar;
     this._barW = barW;
+
+    // Real UI + world art (procedural sprites are still generated in create()).
+    this.load.image('menuBg', 'images/menuBg.png');
+    this.load.image('logo', 'images/logo.png');
+    this.load.image('btnPlay', 'images/btnPlay.png');
+    this.load.image('btnChapters', 'images/btnChapters.png');
+    this.load.image('btnSettings', 'images/btnSettings.png');
+    this.load.image('matsyaWorldBg', 'images/matsyaWorldBg.png');
   }
 
   create() {

@@ -63,3 +63,56 @@ export function makeWaterBackground(scene, worldWidth = GAME_W) {
 
   return { layer, bubbles, rays };
 }
+
+// Level backdrop built from real world art (`bgKey`): a parallax tile of the
+// painted scene, tinted and darkened by an underwater depth overlay, with light
+// rays and rising bubbles on top. Returns the tileSprite so the scene can drive
+// its parallax each frame:  bg.tilePositionX = camera.scrollX * 0.4
+export function makeWorldBackground(scene, bgKey) {
+  const img = scene.textures.get(bgKey).getSourceImage();
+  const tile = scene.add
+    .tileSprite(0, 0, GAME_W, GAME_H, bgKey)
+    .setOrigin(0, 0)
+    .setScrollFactor(0)
+    .setDepth(-120);
+  tile.setTileScale(GAME_H / img.height);
+  tile.setTint(0x6f9fc8); // cool it toward underwater blue
+
+  // Underwater depth overlay: clear near the surface, deep-dark at the bottom.
+  const overlay = scene.add.graphics().setScrollFactor(0).setDepth(-115);
+  overlay.fillGradientStyle(
+    COLORS.shallowWater, COLORS.shallowWater, COLORS.deepWater, COLORS.deepWater,
+    0.25, 0.25, 0.96, 0.96
+  );
+  overlay.fillRect(0, 0, GAME_W, GAME_H);
+
+  // Light rays
+  for (let i = 0; i < 5; i++) {
+    const ray = scene.add
+      .rectangle((GAME_W / 5) * i + 60, 0, 70, GAME_H * 1.2, 0xbdf0ff, 0.05)
+      .setOrigin(0.5, 0)
+      .setAngle(10)
+      .setScrollFactor(0)
+      .setDepth(-110);
+    scene.tweens.add({
+      targets: ray, alpha: { from: 0.03, to: 0.09 },
+      duration: 3200 + i * 400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
+    });
+  }
+
+  // Rising bubbles
+  const bubbles = scene.add.particles(0, 0, 'bubble', {
+    x: { min: 0, max: GAME_W },
+    y: GAME_H + 10,
+    lifespan: 6000,
+    speedY: { min: -55, max: -28 },
+    speedX: { min: -8, max: 8 },
+    scale: { min: 0.2, max: 0.85 },
+    alpha: { start: 0.45, end: 0 },
+    frequency: 320,
+    quantity: 1
+  });
+  bubbles.setScrollFactor(0).setDepth(-108);
+
+  return tile;
+}

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { GAME_W, GAME_H, COLORS, TUNING, OBJECTIVES } from '../config.js';
-import { makeWaterBackground } from '../systems/Background.js';
+import { makeWorldBackground } from '../systems/Background.js';
 import AudioManager from '../systems/AudioManager.js';
 import Controls from '../systems/Controls.js';
 import Matsya from '../entities/Matsya.js';
@@ -20,7 +20,7 @@ export default class Level1Scene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, WORLD_W, GAME_H);
     this.cameras.main.setBounds(0, 0, WORLD_W, GAME_H);
 
-    makeWaterBackground(this, WORLD_W);
+    this.worldBg = makeWorldBackground(this, 'matsyaWorldBg');
     AudioManager.startAmbient();
 
     // Run state (persists across checkpoint respawns within this attempt)
@@ -313,6 +313,8 @@ export default class Level1Scene extends Phaser.Scene {
   update(time, delta) {
     if (this.gameOver) return;
     const dt = delta / 1000;
+    // Parallax the painted world backdrop against the camera.
+    if (this.worldBg) this.worldBg.tilePositionX = this.cameras.main.scrollX * 0.4;
     this.controls.update();
     this.matsya.handleInput(this.controls);
 

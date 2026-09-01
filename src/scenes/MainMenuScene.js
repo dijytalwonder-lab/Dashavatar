@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_W, GAME_H, COLORS } from '../config.js';
-import { makeWaterBackground } from '../systems/Background.js';
+import { GAME_W, GAME_H } from '../config.js';
 import AudioManager from '../systems/AudioManager.js';
 import SaveManager from '../systems/SaveManager.js';
 
@@ -10,113 +9,75 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   create() {
-    makeWaterBackground(this);
+    // --- Background (cover-fit the portrait art) ---
+    const bg = this.add.image(GAME_W / 2, GAME_H / 2, 'menuBg');
+    const cover = Math.max(GAME_W / bg.width, GAME_H / bg.height);
+    bg.setScale(cover);
+    // soft vignette for button legibility
+    this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x001018, 0.18);
 
-    this.add
-      .text(GAME_W / 2, 200, 'DASHAVATARA', {
-        fontFamily: 'Georgia, serif',
-        fontSize: '54px',
-        color: '#ffd257',
-        fontStyle: 'bold'
-      })
-      .setOrigin(0.5)
-      .setShadow(0, 4, '#00131f', 8);
+    // --- Logo ---
+    const logo = this.add.image(GAME_W / 2, 250, 'logo');
+    logo.setScale(640 / logo.width);
+    this.tweens.add({ targets: logo, y: 258, duration: 2600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
 
-    this.add
-      .text(GAME_W / 2, 254, 'THE TEN AVATARS', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '22px',
-        color: '#7fd7ff',
-        fontStyle: 'bold'
-      })
-      .setOrigin(0.5);
-
-    // Big swimming Matsya on the menu
-    const fishY = 560;
-    this.add.image(GAME_W / 2, fishY, 'glow').setScale(2.8).setAlpha(0.5).setBlendMode(Phaser.BlendModes.ADD);
-    const fish = this.add.image(GAME_W / 2, fishY, 'matsya').setScale(2.0);
-    this.tweens.add({
-      targets: fish,
-      y: '+=20',
-      duration: 2200,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    // --- Buttons (real art) ---
+    this._imageButton(GAME_W / 2, 840, 'btnPlay', 430, true, () => {
+      AudioManager.unlock();
+      AudioManager.click();
+      // Quick-play: jump straight into the current world (Chapter 1).
+      this.cameras.main.fadeOut(300, 0, 8, 20);
+      this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Story'));
     });
 
-    this.add
-      .text(GAME_W / 2, 760, 'An epic journey through the ten\nincarnations of Vishnu.', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '20px',
-        color: '#9bd7ef',
-        align: 'center',
-        lineSpacing: 6,
-        fontStyle: 'italic'
-      })
-      .setOrigin(0.5);
-
-    // Play button -> chapter/world select
-    this._button(GAME_W / 2, 900, 'PLAY', () => {
+    this._imageButton(GAME_W / 2, 1000, 'btnChapters', 380, false, () => {
       AudioManager.unlock();
       AudioManager.click();
       this.scene.start('ChapterSelect');
     });
 
-    // Sound toggle
-    this._soundBtn = this.add
-      .text(GAME_W - 30, 30, SaveManager.soundOn ? '🔊' : '🔇', { fontSize: '30px' })
-      .setOrigin(1, 0)
-      .setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => {
-        AudioManager.unlock();
-        const on = AudioManager.toggle();
-        this._soundBtn.setText(on ? '🔊' : '🔇');
-        AudioManager.click();
-      });
-
-    this.add
-      .text(GAME_W / 2, GAME_H - 40, 'Swim · SURGE to dash · TAIL WHIP to strike', {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '16px',
-        color: '#6fb6d6'
-      })
-      .setOrigin(0.5);
+    this._imageButton(GAME_W / 2, 1140, 'btnSettings', 380, false, () => {
+      AudioManager.unlock();
+      AudioManager.click();
+      this.scene.launch('Settings', { from: 'MainMenu' });
+      this.scene.pause();
+    });
 
     // Any tap unlocks audio (browser gesture requirement)
     this.input.once('pointerdown', () => AudioManager.unlock());
   }
 
-  _button(x, y, label, onClick) {
-    const w = 240;
-    const h = 66;
-    const g = this.add.container(x, y);
-    const bg = this.add
-      .rectangle(0, 0, w, h, COLORS.gold, 0.9)
-      .setStrokeStyle(3, 0xfff2cc, 0.9);
-    const txt = this.add
-      .text(0, 0, label, {
-        fontFamily: 'system-ui, sans-serif',
-        fontSize: '30px',
-        color: '#00263a',
-        fontStyle: 'bold'
-      })
-      .setOrigin(0.5);
-    g.add([bg, txt]);
-    bg.setInteractive({ useHandCursor: true })
-      .on('pointerover', () => g.setScale(1.05))
-      .on('pointerout', () => g.setScale(1))
-      .on('pointerdown', () => {
-        g.setScale(0.96);
-        onClick();
+  // An image-based button with press feedback; `pulse` gently breathes (paused
+  // while pressed so the two animations never fight).
+  _imageButton(x, y, key, width, pulse, onClick) {
+    const btn = this.add.image(x, y, key).setInteractive({ useHandCursor: true });
+    const base = width / btn.width;
+    btn.setScale(base);
+
+    let pulseTween = null;
+    if (pulse) {
+      pulseTween = this.tweens.add({
+        targets: btn,
+        scaleX: base * 1.03,
+        scaleY: base * 1.03,
+        duration: 900,
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut'
       });
-    this.tweens.add({
-      targets: g,
-      scale: { from: 1, to: 1.04 },
-      duration: 900,
-      yoyo: true,
-      repeat: -1,
-      ease: 'Sine.easeInOut'
+    }
+
+    btn.on('pointerdown', () => {
+      if (pulseTween) pulseTween.pause();
+      btn.setScale(base * 0.93);
     });
-    return g;
+    const release = (fire) => {
+      btn.setScale(base);
+      if (pulseTween) pulseTween.resume();
+      if (fire) onClick();
+    };
+    btn.on('pointerup', () => release(true));
+    btn.on('pointerout', () => release(false));
+    return btn;
   }
 }

@@ -5,6 +5,7 @@ import BootScene from './scenes/BootScene.js';
 import PreloadScene from './scenes/PreloadScene.js';
 import MainMenuScene from './scenes/MainMenuScene.js';
 import ChapterSelectScene from './scenes/ChapterSelectScene.js';
+import SettingsScene from './scenes/SettingsScene.js';
 import StoryScene from './scenes/StoryScene.js';
 import Level1Scene from './scenes/Level1Scene.js';
 import BossScene from './scenes/BossScene.js';
@@ -40,6 +41,7 @@ const config = {
     PreloadScene,
     MainMenuScene,
     ChapterSelectScene,
+    SettingsScene,
     StoryScene,
     Level1Scene,
     BossScene,
