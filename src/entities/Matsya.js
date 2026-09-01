@@ -7,19 +7,21 @@ import AudioManager from '../systems/AudioManager.js';
 // air drains (surface segments) and reads `health`/`air` for the HUD.
 export default class Matsya extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
-    super(scene, x, y, 'matsya');
+    // Animated swim-cycle spritesheet (falls back to the static hero texture).
+    const animated = scene.textures.exists('matsyaSwim');
+    super(scene, x, y, animated ? 'matsyaSwim' : 'matsya');
     scene.add.existing(this);
     scene.physics.add.existing(this);
+    if (animated && scene.anims.exists('matsya-swim')) this.play('matsya-swim');
 
     this.setCollideWorldBounds(true);
-    // Scale the real hero sprite to a good gameplay size (~120px wide) and fit a
-    // circular hitbox over the fish's head/body. Falls back cleanly if a smaller
-    // (procedural) texture is in use.
-    const targetW = 120;
+    // Scale to a good gameplay size (~130px wide) and fit a circular hitbox over
+    // the fish's head/body (head sits on the right of each frame).
+    const targetW = 132;
     this.baseScale = Math.min(1, targetW / this.width);
     this.setScale(this.baseScale);
-    const r = this.height * 0.34;
-    this.body.setCircle(r, this.width * 0.62 - r, this.height * 0.5 - r);
+    const r = this.height * 0.32;
+    this.body.setCircle(r, this.width * 0.6 - r, this.height * 0.5 - r);
     this.setDrag(TUNING.matsyaDrag);
     this.setMaxVelocity(TUNING.dashSpeed);
     this.setDepth(50);
@@ -39,7 +41,7 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
       alpha: { start: 0.5, end: 0 },
       frequency: 120,
       follow: this,
-      followOffset: { x: -20, y: 0 }
+      followOffset: { x: -46, y: 0 }
     });
     this.trail.setDepth(49);
   }
@@ -83,6 +85,12 @@ export default class Matsya extends Phaser.Physics.Arcade.Sprite {
     this.setFlipX(this.facing < 0);
     const targetAngle = Phaser.Math.Clamp(this.body.velocity.y * 0.05, -20, 20) * this.facing;
     this.setAngle(Phaser.Math.Linear(this.angle, targetAngle, 0.15));
+
+    // Swim animation beats faster the quicker Matsya moves.
+    if (this.anims && this.anims.isPlaying) {
+      const spd = Math.hypot(this.body.velocity.x, this.body.velocity.y);
+      this.anims.timeScale = Phaser.Math.Clamp(0.6 + spd / 260, 0.6, 2.2);
+    }
 
     // occasional swim sfx
     if (Math.hypot(v.x, v.y) > 0.4 && Math.random() < 0.03) AudioManager.swim();

@@ -44,6 +44,7 @@ export default class PreloadScene extends Phaser.Scene {
     // Real UI + world art (remaining sprites are generated procedurally in create()).
     // Hero + gameplay sprites
     this.load.image('matsya', 'images/matsya.png');
+    this.load.spritesheet('matsyaSwim', 'images/matsya_swim.png', { frameWidth: 250, frameHeight: 186 });
     this.load.image('enemyFish', 'images/enemyFish.png');
     this.load.image('eel', 'images/eel.png');
     this.load.image('sage', 'images/sage.png');
@@ -69,6 +70,17 @@ export default class PreloadScene extends Phaser.Scene {
 
   create() {
     generateAllTextures(this);
+
+    // Matsya swim-cycle animation (global — usable from any scene).
+    if (!this.anims.exists('matsya-swim')) {
+      this.anims.create({
+        key: 'matsya-swim',
+        frames: this.anims.generateFrameNumbers('matsyaSwim', { start: 0, end: 5 }),
+        frameRate: 9,
+        repeat: -1
+      });
+    }
+
     // brief bar fill for a polished boot (cosmetic)…
     this.tweens.add({
       targets: this._bar,
