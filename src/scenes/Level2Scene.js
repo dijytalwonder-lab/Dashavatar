@@ -19,17 +19,23 @@ export default class Level2Scene extends Phaser.Scene {
     this.cameras.main.fadeIn(500, 0, 8, 20);
     this.physics.world.setBounds(0, 60, GAME_W, GAME_H - 60);
 
-    // Backdrop (reuse the underwater scenes; static single here)
-    const bg = this.add.image(GAME_W / 2, GAME_H / 2, 'bgFar').setDepth(-120);
-    bg.setScale(Math.max(GAME_W / bg.width, GAME_H / bg.height)).setTint(0x4a6f88);
-    this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x03121f, 0.28).setDepth(-115);
+    // Backdrop — the Kurma churning-ocean scene (already shows Mount Mandara +
+    // the swirling sea), cover-fit. Falls back to the underwater scene if absent.
+    const bgKey = this.textures.exists('kurmaBg') ? 'kurmaBg' : 'bgFar';
+    const bg = this.add.image(GAME_W / 2, GAME_H / 2, bgKey).setDepth(-120);
+    bg.setScale(Math.max(GAME_W / bg.width, GAME_H / bg.height));
+    if (bgKey === 'bgFar') bg.setTint(0x4a6f88);
+    // gentle depth overlay so HUD + sprites stay readable
+    this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x03121f, 0.22).setDepth(-115);
     AudioManager.startAmbient();
 
-    // Mount Mandara + Vasuki, churning at the top
-    this.vasuki = this.add.image(GAME_W / 2, 150, 'vasuki').setDepth(4).setScale(1.4);
-    this.mandara = this.add.image(GAME_W / 2, 130, 'mandara').setDepth(5).setScale(0.9);
-    this.tweens.add({ targets: this.mandara, angle: { from: -4, to: 4 }, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    this.tweens.add({ targets: this.vasuki, angle: { from: 3, to: -3 }, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    // If we only have the procedural placeholder, still draw the churning mountain.
+    if (bgKey === 'bgFar' && this.textures.exists('mandara')) {
+      this.vasuki = this.add.image(GAME_W / 2, 150, 'vasuki').setDepth(4).setScale(1.4);
+      this.mandara = this.add.image(GAME_W / 2, 130, 'mandara').setDepth(5).setScale(0.9);
+      this.tweens.add({ targets: this.mandara, angle: { from: -4, to: 4 }, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+      this.tweens.add({ targets: this.vasuki, angle: { from: 3, to: -3 }, duration: 1200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
 
     // State
     this.churn = 0;

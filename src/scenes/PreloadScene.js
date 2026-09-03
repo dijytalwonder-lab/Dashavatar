@@ -71,6 +71,15 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btnSettings', 'images/btnSettings.png');
     this.load.image('pauseBtn', 'images/pauseBtn.png');
     this.load.image('lockedWorld', 'images/lockedWorld.png');
+    // Chapter 2 (Kurma) real art
+    this.load.image('kurma', 'images/kurma.png');
+    this.load.image('kurmaShell', 'images/kurmaShell.png');
+    this.load.image('rock', 'images/rock.png');
+    this.load.image('poison', 'images/poison.png');
+    this.load.image('asura', 'images/asura.png');
+    this.load.image('treasure', 'images/treasure.png');
+    this.load.image('amritaPot', 'images/amritaPot.png');
+    this.load.image('kurmaBg', 'images/kurmaBg.jpg');
   }
 
   create() {
